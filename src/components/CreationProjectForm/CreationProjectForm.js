@@ -22,6 +22,7 @@ class CreationProjectForm extends Component {
                 <input 
                     type="text" 
                     placeholder="نام پروژه" 
+                    autoFocus
                     value={this.state.projectName} 
                     onChange={this.inputChangeHandler} />
                 <Button 
