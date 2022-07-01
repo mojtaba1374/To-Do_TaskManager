@@ -1,0 +1,10 @@
+.ProjectArea {
+    background-color: #fff;
+    width: calc(100% - 200px);
+    height: calc(100vh - 50px);
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+    padding: 10px 30px;
+    overflow-x: scroll;
+}

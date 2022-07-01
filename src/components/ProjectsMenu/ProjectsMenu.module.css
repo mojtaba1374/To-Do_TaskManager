@@ -1,0 +1,33 @@
+.ProjectsMenu {
+    width: 200px;
+    height: calc(100vh - 50px);
+    background-color: #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.ProjectsHeader {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 2px solid gray;
+}
+
+/* .Projects {
+    display: flex;
+    flex-direction: column;
+}
+
+.ProjectItem {
+    padding: 5px;
+    margin: 5px 0;
+    border-right: 5px solid rgb(222, 160, 135);
+    cursor: pointer;
+}
+
+.ProjectItem span {
+    width: 5px;
+    height: 5px;
+    background-color: black;
+} */
