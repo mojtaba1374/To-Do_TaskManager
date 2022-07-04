@@ -7,12 +7,20 @@
 .TaskNameContainer {
     width: 100%;
     padding: 10px 5px;
-    border: 1px solid rgb(170, 170, 170);
+    margin: 5px 0;
+    outline: 1px solid rgb(226, 168, 43);
     border-radius: 5px;
+    transition: all 0.2s ease-out;
+}
+
+.BtnGroup {
+    display: flex;
+    justify-content: center;
 }
 
 .TaskNameContainer:focus {
-    outline: none;
+    outline: 4px solid rgba(226, 168, 43, 0.61);
+    border: 0;
 }
 
 .TaskCreator input {

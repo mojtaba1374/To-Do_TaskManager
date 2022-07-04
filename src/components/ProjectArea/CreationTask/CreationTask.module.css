@@ -1,5 +1,8 @@
 .AddBtnTaskContainer {
-    position: relative;
-    right: 90%;
-    top: -20px;
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    /* top: -20px; */
 }

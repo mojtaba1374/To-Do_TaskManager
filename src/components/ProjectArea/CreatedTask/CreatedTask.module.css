@@ -1,13 +1,18 @@
 .Task {
     width: 95%;
-    height: 60px;
+    min-height: 60px;
     margin: 10px auto;
-    background-color: rgb(187, 191, 248);
+    background-color: #b3e2e4;
+    /* border: 1px solid gray; */
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    overflow: hidden;
     padding: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: all 0.2s ease-out;
 }
 
 .Task:hover {
-    background-color: rgb(150, 157, 250);
+    box-shadow: 0 0 10px rgb(102, 102, 102);
 }

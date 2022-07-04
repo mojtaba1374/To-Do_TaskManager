@@ -1,28 +1,30 @@
 .Button {
     /* display: inline-block; */
+    font-size: inherit;
+    font-family: inherit;
     padding: 5px 10px;
     margin: 5px 10px;
     width: 70px;
     border: none;
-    border-radius: 5px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
 .Green {
-    background-color: rgb(30, 255, 86);
+    background-color: rgb(30, 255, 150);
 }
 
 .Green:hover {
-    background-color: rgb(8, 211, 58);
+    background-color: rgb(12, 240, 31);
 }
 
 .Red {
-    background-color: rgba(253, 89, 24);
+    background-color: rgb(230, 120, 76);
 }
 
 .Red:hover {
-    background-color: rgb(214, 54, 14);
+    background-color: rgb(233, 75, 35);
 }
 
 .Button:disabled {

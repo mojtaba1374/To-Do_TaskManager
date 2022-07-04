@@ -4,7 +4,12 @@ import classes from './ProjectsDashboard.module.css';
 import ProjectsMenu from '../ProjectsMenu/ProjectsMenu';
 import ProjectArea from '../ProjectArea/ProjectArea';
 
+
 class ProjectsDashboard extends Component {
+
+    onDragEnd = () => {
+        
+    }
 
     render() {
         return(

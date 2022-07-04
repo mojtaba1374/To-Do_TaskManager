@@ -4,7 +4,8 @@ import classes from './CreatedTask.module.css';
 class Task extends Component {
     render() {
         return (
-            <div className={classes.Task} draggable>
+            <div 
+                className={classes.Task}>
                 {this.props.title}
             </div>
         );

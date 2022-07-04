@@ -31,19 +31,13 @@ class ProjectsMenu extends Component {
 
         this.props.onUpdateActiveProject(prjName, projectId);
 
-        // baraye project zakhire shode dar redux bayad id ham set konam
-        // baraye project zakhire shode dar redux bayad state haye todo doing done ham set konam
         const project = {
             [projectId]: {
+                id: projectId,
                 projectName: prjName,
                 tasks: []
             }
         }
-        // const project = {
-        //     projectName: prjName,
-        //     id: projectId,
-        //     tasks: []
-        // }
 
         projectId++;  // For test before rich API
         
@@ -67,7 +61,8 @@ class ProjectsMenu extends Component {
                     key={projectId} 
                     projectName={project[projectId].projectName} 
                     selectedProject={
-                        () => this.changeActiveProject(project[projectId].projectName, projectId)} 
+                        () => this.changeActiveProject(project[projectId].projectName, projectId)
+                    } 
                     activeProjectName={this.props.activeProject}/>
             );
         })
@@ -85,9 +80,9 @@ class ProjectsMenu extends Component {
                     <span>پروژه ها</span>
                     <AddButton clickeAddBtn={this.addProjectBtnHandler} />
                 </div>
-                <Projects>
-                    {projects}
-                </Projects>
+                    <Projects>
+                        {projects}
+                    </Projects>
             </div>
         );
     }

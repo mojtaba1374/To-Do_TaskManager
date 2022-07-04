@@ -10,6 +10,11 @@ class TaskCreator extends Component {
         this.taskContent = React.createRef();
     }
 
+    
+    componentDidMount() {
+        this.taskContent.current.focus();
+    }
+
     render() {
         return (
             <div className={classes.TaskCreator}>
@@ -18,13 +23,15 @@ class TaskCreator extends Component {
                     contentEditable="true"
                     ref={this.taskContent}>
                 </div>
-                <Button btnColor="green" 
-                    clickedBtn={event => this.props.clickedSaveBtn(event, this.taskContent.current.innerText)}
-                    >ذخیره
-                </Button>
-                <Button btnColor="red" 
-                    clickedBtn={this.props.clickedCancelBtn}>لغو
-                </Button>
+                <div className={classes.BtnGroup}>
+                    <Button btnColor="green" 
+                        clickedBtn={event => this.props.clickedSaveBtn(event, this.taskContent.current.innerText)}
+                        >ذخیره
+                    </Button>
+                    <Button btnColor="red" 
+                        clickedBtn={this.props.clickedCancelBtn}>لغو
+                    </Button>
+                </div>
             </div>
         );
     }

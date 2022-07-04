@@ -1,7 +1,9 @@
 .ProjectsMenu {
-    width: 200px;
+    min-width: 230px;
     height: calc(100vh - 50px);
-    background-color: #ccc;
+    background-color: rgb(243, 243, 243);
+    border-left: 1px solid #eee;
+    border-radius: 20px 0 0 0;
     padding: 10px;
     display: flex;
     flex-direction: column;
@@ -11,7 +13,7 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
-    border-bottom: 2px solid gray;
+    border-bottom: 2px solid rgb(218, 217, 217);
 }
 
 /* .Projects {
