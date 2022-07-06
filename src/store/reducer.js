@@ -1,95 +1,7 @@
 const initialState = {
     activeProject: '',
     activeProjectId: 0,
-    projects: [
-        {
-          '1': {
-            id: 1,
-            projectName: 'اول',
-            tasks: [
-              {
-                '1اولین': {
-                  id: 15,
-                  name: 'اولین',
-                  column: 'column-1'
-                }
-              },
-              {
-                '1دومین': {
-                  id: 16,
-                  name: 'دومین',
-                  column: 'column-1'
-                }
-              },
-              {
-                '1سومین': {
-                  id: 17,
-                  name: 'سومین',
-                  column: 'column-2'
-                }
-              }
-            ]
-          }
-        },
-        {
-          '2': {
-            id: 2,
-            projectName: 'دوم',
-            tasks: [
-              {
-                '2اووولین': {
-                  id: 18,
-                  name: 'اووولین',
-                  column: 'column-2'
-                }
-              },
-              {
-                '2دووومین': {
-                  id: 19,
-                  name: 'دووومین',
-                  column: 'column-2'
-                }
-              },
-              {
-                '2سووومین': {
-                  id: 111,
-                  name: 'سووومین',
-                  column: 'column-1'
-                }
-              }
-            ]
-          }
-        },
-        {
-          '3': {
-            id: 3,
-            projectName: 'سوم',
-            tasks: [
-              {
-                '3اوووووولین': {
-                  id: 112,
-                  name: 'اوووووولین',
-                  column: 'column-2'
-                }
-              },
-              {
-                '3دووووومین': {
-                  id: 113,
-                  name: 'دووووومین',
-                  column: 'column-1'
-                }
-              },
-              {
-                '3سوووووومین': {
-                  id: 114,
-                  name: 'سوووووومین',
-                  column: 'column-3'
-                }
-              }
-            ]
-          }
-        }
-      ]
+    projects: []
 };
 
 // let taskId = 1;  // For test before reach out API
@@ -116,7 +28,7 @@ const reducer = (state = initialState, action) => {
             updatedProjects.forEach(project => {
                 let prjId = +Object.keys(project)[0];
                 if(prjId === +state.activeProjectId) {
-                    project[prjId].tasks.push({
+                    project[prjId].columns['column-1'].tasks.push({
                         [Math.random() + action.taskContent]: {
                             id: prjId + action.taskContent,
                             name: action.taskContent,
@@ -130,6 +42,45 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 projects: updatedProjects
             }
+            break;
+        case 'DRAG_TASK_IN_SAME_COLUMN':
+            // console.log(action.newTasksArr);
+            const updateProjects = [...state.projects];
+
+            updateProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    // console.log(action.newColumn.id);
+                    project[prjId].columns = {
+                        ...project[prjId].columns,
+                        [action.newColumn.id]: action.newColumn
+                    }
+                    console.log(project);
+                }
+            });
+            updatedState = {
+                ...state,
+                projects: updateProjects
+            };
+            break;
+        case 'DRAG_TASK_IN_OTHER_COLUMN':
+            const copyProjects = [...state.projects];
+
+            copyProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    // console.log(action.newColumn.id);
+                    project[prjId].columns = {
+                        ...project[prjId].columns,
+                        [action.newStartCol.id]: action.newStartCol,
+                        [action.newEndCol.id]: action.newEndCol,
+                    }
+                }
+            });
+            updatedState = {
+                ...state,
+                projects: copyProjects
+            };
             break;
         default:
             updatedState = state;

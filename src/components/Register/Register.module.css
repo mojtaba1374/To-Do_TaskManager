@@ -1,0 +1,58 @@
+.ContactData {
+    border: 1px solid rgba(172, 172, 172, 0.39);
+    border-radius: 10px;
+    background-color: #f6f8fa;
+    width: 350px;
+    height: auto;
+    margin: auto;
+    padding: 10px;
+    color: 24292f;
+    transform: translateY(30%);
+    box-shadow: 0 0 3px rgba(172, 172, 172, 0.39);
+}
+
+@media only screen and (max-width: 400px) {
+    .ContactData {
+        width: 90%;
+    }
+}
+
+.Form {
+    gap: 10px;
+    width: 90%;
+    padding: 10px;
+    margin: 0 15px;
+}
+
+.Button {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    outline: none;
+    border: none;
+    box-sizing: border-box;
+    background-color: #2da44e;
+    margin: 10px auto;
+    border-radius: 10px;
+    color: #eee;
+    font-weight: bolder;
+    cursor: pointer;
+    transition: all 0.2s ease-in;
+}
+
+.Button:hover {
+    background-color: #1f813a;
+}
+
+.Button:disabled {
+    background-color: #2da44f6c;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+.ContactData h3 {
+    margin: 0.75em 0 10px 0;
+    padding-bottom: 0.75em;
+    text-align: center;
+    border-bottom: 2px solid rgb(172, 172, 172);
+}

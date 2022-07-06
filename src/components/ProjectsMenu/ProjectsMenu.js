@@ -35,7 +35,24 @@ class ProjectsMenu extends Component {
             [projectId]: {
                 id: projectId,
                 projectName: prjName,
-                tasks: []
+                tasks: [],
+                columns: {
+                    'column-1': {
+                      id: 'column-1',
+                      title: 'برای انجام',
+                      tasks: [],
+                    },
+                    'column-2': {
+                      id: 'column-2',
+                      title: 'در حال انجام',
+                      tasks: [],
+                    },
+                    'column-3': {
+                      id: 'column-3',
+                      title: 'انجام شده',
+                      tasks: [],
+                    },
+                }
             }
         }
 

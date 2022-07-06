@@ -7,100 +7,23 @@ import { connect } from 'react-redux/es/exports';
 
 import { DragDropContext } from 'react-beautiful-dnd';
 
-const COLUMN_ORDER = ['column-1', 'column-2', 'column-3'];
-
-const reorderColumnList = (sourceCol, startIndex, endIndex) => {
-    const newTasks = Array.from(sourceCol.tasks);
-    const [removed] = newTasks.splice(startIndex, 1);
-    newTasks.splice(endIndex, 0, removed);
-    
-    const newColumn = {
-      ...sourceCol,
-      tasks: newTasks,
-    };
-  
-    return newColumn;
-  };
-
 class ProjectArea extends Component {
 
-    state = {
-        projectTasks: [],
-        columns: {
-            'column-1': {
-              id: 'column-1',
-              title: 'برای انجام',
-              tasks: [],
-            },
-            'column-2': {
-              id: 'column-2',
-              title: 'در حال انجام',
-              tasks: [],
-            },
-            'column-3': {
-              id: 'column-3',
-              title: 'انجام شده',
-              tasks: [],
-            },
-        }
-    }
-
-    // componentDidMount() {
-    //     console.log(this.props.projects);
-    // }
-
-    componentDidUpdate(prevProps, prevState) {
-        
-        let prjActiveId;
-        let projectTasks;
-        for(const project of this.props.projects) {
-            prjActiveId = Object.keys(project)[0];
-            if(+prjActiveId === +this.props.activeProjectId) {
-                projectTasks = [...project[prjActiveId].tasks];
-            }
-        }
-        if(JSON.stringify(projectTasks) === JSON.stringify(prevState.projectTasks)) {
-            return;
-        }
-        let todoTasks = [];
-        let doingTasks = [];
-        let doneTasks = [];
-
-        projectTasks.forEach(task => {
-            const taskId = Object.keys(task)[0];
-            if(task[taskId].column === 'column-1') {
-                todoTasks.push(task);
-            } else if(task[taskId].column === 'column-2') {
-                doingTasks.push(task);
-            } else if(task[taskId].column === 'column-3') {
-                doneTasks.push(task);
-            }
-        });
-
-        this.setState({
-            projectTasks: projectTasks,
-            columns: {
-                'column-1': {
-                    ...this.state.columns['column-1'],
-                    tasks: [...todoTasks],
-                },
-                'column-2': {
-                    ...this.state.columns['column-2'],
-                    tasks: [...doingTasks],
-                },
-                'column-3': {
-                    ...this.state.columns['column-3'],
-                    tasks: [...doneTasks],
-                },
-            }
-        });
-    }
-
     onDragEnd = (result) => {
+
+        let columns;
+        this.props.projects.forEach(project => {
+            const projectId = Object.keys(project)[0];
+            if(+projectId === +this.props.activeProjectId) {
+                columns = project[projectId].columns;
+            }
+        });
+
         console.log('dragend');
         const { destination, source } = result;
         console.log(destination);
         console.log(source);
+
         // If user tries to drop in an unknown destination
         if (!destination) return;
     
@@ -113,27 +36,23 @@ class ProjectArea extends Component {
         }
     
         // If the user drops within the same column but in a different positoin
-        const sourceCol = this.state.columns[source.droppableId];
-        const destinationCol = this.state.columns[destination.droppableId];
+        const sourceCol = columns[source.droppableId];
+        const destinationCol = columns[destination.droppableId];
     
         console.log(sourceCol.tasks);
 
         if (sourceCol.id === destinationCol.id) {
-          const newColumn = reorderColumnList(
-            sourceCol,
-            source.index,
-            destination.index
-          );
+        
+            const newTasks = Array.from(sourceCol.tasks);
+            const [removed] = newTasks.splice(source.index, 1);
+            newTasks.splice(destination.index, 0, removed);
+            const newColumn = {
+              ...sourceCol,
+              tasks: newTasks,
+            };
+            // mitavan payload haye index , columni ke hast ham gozasht baraye ferestadan be backend
+            this.props.onDragTaskInSameColumn(newColumn);  // dispatching action for reordering in same column
     
-          const newState = {
-            ...this.state,
-            columns: {
-              ...this.state.columns,
-              [newColumn.id]: newColumn,
-            },
-          };
-          this.props.onDragTaskInSameColumn();
-          this.setState(newState);
           return;
         }
     
@@ -151,36 +70,32 @@ class ProjectArea extends Component {
           ...destinationCol,
           tasks: endTasks,
         };
-
-        console.log(newStartCol);
-        console.log(newEndCol);
-    
-        const newState = {
-          ...this.state,
-          columns: {
-            ...this.state.columns,
-            [newStartCol.id]: newStartCol,
-            [newEndCol.id]: newEndCol,
-          },
-        };
-    
-        this.setState(newState);
-      };
+        // mitavan payload haye index , columni ke hast va mikhad bere ra ham gozasht baraye ferestadan be backend
+        this.props.onDragTaskInOtherColumn(newStartCol, newEndCol);
+    };
 
     render() {
-        // console.log(this.state.projectTasks);
-        // console.log(this.state.columns);
+
+        let columns;
+        this.props.projects.forEach(project => {
+            const projectId = Object.keys(project)[0];
+            if(+projectId === +this.props.activeProjectId) {
+                columns = project[projectId].columns;
+            }
+        });
+        console.log(columns);
         
         return(
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <div className={classes.ProjectArea}>
-                    {COLUMN_ORDER.map(col => {
-                        const column = this.state.columns[col];
-                        const tasks = column.tasks
+                    {columns &&
+                    Object.keys(columns).map(col => {
+                        const column = columns[col];
+                        const tasks = column.tasks;
                         return (
                             <Section 
                                 key={col} 
-                                sectionName={this.state.columns[col].title}
+                                sectionName={column.title}
                                 column={column}
                                 tasks={tasks} />
                         );
@@ -203,9 +118,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onAddToDoTaskForActiveProject:
-            (taskContent) => dispatch({type: 'ADD_TODO_TASK_FOR_ACTIVE_PROJECT', taskContent: taskContent}),
-        onDragTaskInSameColumn: () => dispatch({type: 'Drag_Task_IN_Same_Column'}),
-        onDragTaskInOtherColumn: () => dispatch({type: 'Drag_Task_IN_Same_Column'})
+            (taskContent) => dispatch({type: 'ADD_TODO_TASK_FOR_ACTIVE_PROJECT', taskContent}),
+        onDragTaskInSameColumn:
+            newColumn => dispatch({type: 'DRAG_TASK_IN_SAME_COLUMN', newColumn}),
+        onDragTaskInOtherColumn: 
+            (newStartCol, newEndCol) => dispatch({type: 'DRAG_TASK_IN_OTHER_COLUMN', newStartCol, newEndCol})
     };
 };
 

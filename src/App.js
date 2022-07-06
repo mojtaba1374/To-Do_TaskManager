@@ -4,6 +4,8 @@ import Layout from './components/Layout/Layout';
 import Header from './components/Header/Header';
 import ProjectsDashboard from './components/ProjectsDashboard/ProjectsDashboard';
 
+import axios from 'axios';
+
 import { createStore } from 'redux';
 import { Provider } from 'react-redux/es/exports';
 import reducer from './store/reducer';
@@ -16,9 +18,15 @@ const store = createStore(
 
 class App extends Component {
 
-  onDragEndHandler = () => {
-    console.log('yeap dragend ');
-  }
+  // componentDidMount() {
+  //   axios.get('http://localhost:8000/projects/')
+  //     .then(response => {
+  //       console.log(response);
+  //     })
+  //     // .catch(err => {
+  //     //   console.log(err);
+  //     // });
+  // }
 
   render() {
     return (

@@ -84,7 +84,7 @@ class Section extends Component {
                                         <Draggable key={taskId} draggableId={`${taskId}`} index={index}>
                                             {(draggableProvided, draggableSnapshot) => (
                                                 <div 
-                                                    className={classes.Task}
+                                                    className={draggableSnapshot.isDragging ? classes.DraggingTask : classes.Task}
                                                     ref={draggableProvided.innerRef}
                                                     {...draggableProvided.draggableProps}
                                                     {...draggableProvided.dragHandleProps}
