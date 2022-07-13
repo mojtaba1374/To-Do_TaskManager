@@ -1,0 +1,38 @@
+.Alert {
+    width: 250px;
+    height: 80px;
+    border-radius: 10px;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    background-color: rgb(253, 126, 80);
+    margin-bottom: 10px;
+    z-index: 10;
+}
+
+.Success {
+    background-color: greenyellow;
+}
+
+.Unsuccess {
+    background-color: rgb(253, 126, 80);
+}
+
+.IconContainer {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+}
+
+.Icon {
+    transition: all 0.3s ease-out;
+    color: #303030;
+}
+
+.IconContainer:hover {
+    cursor: pointer;
+}
+
+.IconContainer:hover .Icon {
+    color: #fff;
+}

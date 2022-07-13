@@ -1,5 +1,23 @@
 .Projects {
     display: flex;
     flex-direction: column;
-    /* gap: 15px; */
+    overflow-y: auto;
+}
+
+.Projects::-webkit-scrollbar {
+    width: 10px;
+}
+
+.Projects::-webkit-scrollbar-track {
+    background: #e6e6e6;
+    border-radius: 15px;
+}
+
+.Projects::-webkit-scrollbar-thumb {
+    background: #c4c4c4;
+    border-radius: 10px;
+}
+
+.Projects::-webkit-scrollbar-thumb:hover {
+    background: rgb(153, 153, 153);
 }

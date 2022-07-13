@@ -1,43 +1,54 @@
 import React, { Component } from 'react';
 
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+
 import Layout from './components/Layout/Layout';
-import Header from './components/Header/Header';
 import ProjectsDashboard from './components/ProjectsDashboard/ProjectsDashboard';
+import Register from './components/Register/Register';
+import * as actions from './store/actions/index';
 
-import axios from 'axios';
+// import axios from 'axios';
+import { connect } from 'react-redux';
 
-import { createStore } from 'redux';
-import { Provider } from 'react-redux/es/exports';
-import reducer from './store/reducer';
-// import { DragDropContext } from 'react-beautiful-dnd';
 
-const store = createStore(
-  reducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
 
 class App extends Component {
 
   // componentDidMount() {
-  //   axios.get('http://localhost:8000/projects/')
-  //     .then(response => {
-  //       console.log(response);
-  //     })
-  //     // .catch(err => {
-  //     //   console.log(err);
-  //     // });
+  //   this.props.onAutoLogin();
   // }
 
   render() {
+
+    const routing = (
+      <Switch>
+        <Route path="/account/login" exact component={Register} />
+        <Route path="/account/register" exact component={Register} />
+        <Route path="/dashboard" component={ProjectsDashboard} />
+        <Redirect from="/" to="/account/login" />
+      </Switch>
+    );
+
     return (
-      <Provider store={store}>
+      <BrowserRouter>
         <Layout>
-          <Header />
-          <ProjectsDashboard />
+          {routing}
         </Layout>
-      </Provider>
+      </BrowserRouter>
     );
   }
 }
 
-export default App;
+// const mapStateToProps = state => {
+//   return {
+//     isAuth: state.isAuth
+//   };
+// };
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onAutoLogin: () => dispatch(actions.autoLogin())
+  };
+};
+
+export default connect(null, mapDispatchToProps)(App);

@@ -7,7 +7,7 @@
     margin: auto;
     padding: 10px;
     color: 24292f;
-    transform: translateY(30%);
+    transform: translateY(100px);
     box-shadow: 0 0 3px rgba(172, 172, 172, 0.39);
 }
 
@@ -26,13 +26,14 @@
 
 .Button {
     display: block;
+    position: relative;
     width: 200px;
     padding: 10px;
     outline: none;
     border: none;
     box-sizing: border-box;
     background-color: #2da44e;
-    margin: 10px auto;
+    margin: 15px auto 10px;
     border-radius: 10px;
     color: #eee;
     font-weight: bolder;
@@ -55,4 +56,29 @@
     padding-bottom: 0.75em;
     text-align: center;
     border-bottom: 2px solid rgb(172, 172, 172);
+}
+
+.FormFooter {
+    text-align: center;
+    font-size: 14px;
+    padding: 5px;
+    margin: 0;
+}
+
+.FormFooter span {
+    display: inline-block;
+    color: #0969da;
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+.FormFooter span:hover {
+    text-decoration-line: underline;
+}
+
+.loader {
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    z-index: 5;
 }

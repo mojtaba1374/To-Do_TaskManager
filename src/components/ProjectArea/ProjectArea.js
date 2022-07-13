@@ -7,6 +7,9 @@ import { connect } from 'react-redux/es/exports';
 
 import { DragDropContext } from 'react-beautiful-dnd';
 
+import * as actionTypes from '../../store/actions/actionTypes';
+// import axios from 'axios';
+
 class ProjectArea extends Component {
 
     onDragEnd = (result) => {
@@ -109,20 +112,20 @@ class ProjectArea extends Component {
 
 const mapStateToProps = state => {
     return {
-        activeProject: state.activeProject,
-        activeProjectId: state.activeProjectId,
-        projects: state.projects
+        activeProject: state.dashboard.activeProject,
+        activeProjectId: state.dashboard.activeProjectId,
+        projects: state.dashboard.projects
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onAddToDoTaskForActiveProject:
-            (taskContent) => dispatch({type: 'ADD_TODO_TASK_FOR_ACTIVE_PROJECT', taskContent}),
+            (taskContent) => dispatch({type: actionTypes.ADD_TODO_TASK_FOR_ACTIVE_PROJECT, taskContent}),
         onDragTaskInSameColumn:
-            newColumn => dispatch({type: 'DRAG_TASK_IN_SAME_COLUMN', newColumn}),
+            newColumn => dispatch({type: actionTypes.DRAG_TASK_IN_SAME_COLUMN, newColumn}),
         onDragTaskInOtherColumn: 
-            (newStartCol, newEndCol) => dispatch({type: 'DRAG_TASK_IN_OTHER_COLUMN', newStartCol, newEndCol})
+            (newStartCol, newEndCol) => dispatch({type: actionTypes.DRAG_TASK_IN_OTHER_COLUMN, newStartCol, newEndCol})
     };
 };
 

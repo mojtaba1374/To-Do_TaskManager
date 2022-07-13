@@ -1,10 +1,10 @@
 .ProjectsMenu {
     min-width: 230px;
     height: calc(100vh - 50px);
-    background-color: rgb(243, 243, 243);
+    background-color: rgba(228, 217, 200, 0.486);
     border-left: 1px solid #eee;
     border-radius: 20px 0 0 0;
-    padding: 10px;
+    padding: 10px 15px 10px 10px;
     display: flex;
     flex-direction: column;
 }

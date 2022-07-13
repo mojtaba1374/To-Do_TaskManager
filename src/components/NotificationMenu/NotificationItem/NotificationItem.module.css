@@ -1,0 +1,39 @@
+.NotificationItem {
+    text-align: center;
+    width: 95%;
+    /* border: 1px solid red; */
+    background-color: #fff8d1;
+    border-radius: 10px;
+    margin: 5px auto;
+    padding: 5px;
+}
+
+.NotificationItem p {
+    margin: 5px 0;
+}
+
+.NotificationItem button {
+    width: 70px;
+    padding: 3px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+}
+
+.NotificationItem .ConfirmedBtn {
+    background-color: #2ddce9;
+}
+
+.NotificationItem .ConfirmedBtn:hover {
+    background-color: #27c3ce;
+}
+
+.NotificationItem .RejectedBtn {
+    background-color: #e69e75;
+}
+
+.NotificationItem .RejectedBtn:hover {
+    background-color: #d38f68;
+}

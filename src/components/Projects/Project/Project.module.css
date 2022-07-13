@@ -1,10 +1,30 @@
 .ProjectItem {
     padding: 5px 10px 5px 5px;
+    position: relative;
     margin: 5px 0;
     border-right: 5px solid #dd4b39;
     border-radius: 10px 5px 5px 10px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+}
+
+.SettingIcon {
+    position: absolute;
+    left: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 16px;
+    top: 50%;
+    font-size: 16px;
+    opacity: 0.1;
+    z-index: 5;
+    transform: translateY(-50%);
+    transition: all 0.3s ease-out;
+}
+
+.SettingIcon:hover {
+    opacity: 0.5;
 }
 
 .ActivaProject {

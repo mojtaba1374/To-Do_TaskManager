@@ -1,27 +1,55 @@
 import React, { Component } from 'react';
 import classes from './Register.module.css';
 
-// import axios from '../../../axios-orders';
-// import Button from '../../../components/UI/Button/Button';
-
-// import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from './Input/Input';
-// import { connect } from 'react-redux';
+import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
 
+// import axios from '../../../axios-orders';
+import axios from 'axios';
 // import withErrorHandler from '../../../hoc/WithErrorHandler/withErrorHandler';
-// import * as actionCreators from '../../../store/actions/index';
 
-const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+import { Redirect } from 'react-router-dom';
+
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index'
+
 const EMAILREgex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 const USERNAMEREgex = /^(?=.{4,32}$)(?![_.-])(?!.*[_.]{2})[a-zA-Z0-9._-]+(?<![_.])$/;
-const PASSWORDREGex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+const PASSWORDREGex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,16}$/;
+
+const FORM_STATE = {
+    logIn: 'logIn',
+    signUp: 'signUp'
+};
+
+const FORM_HEADER = {
+    logIn: 'ورود به حساب کاربری',
+    signUp: 'ساخت حساب کاربری'
+};
+
+const FORM_BUTTON = {
+    login: 'وارد شدن',
+    signup: 'عضو شدن'
+}
+
+const FORM_FOOTER = {
+    logIn: {
+        paragraph: 'کاربر جدید هستید؟',
+        span: 'ساخت حساب کاربری'
+    } ,
+    signUp: {
+        paragraph: 'حساب کاربری دارید؟',
+        span: 'ورود به حساب کاربری'
+    }
+};
 
 class Register extends Component {
 
     state = {
+        formState: FORM_STATE.logIn,
         formValid: false,
         formData: {
-            name: {
+            username: {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
@@ -69,10 +97,10 @@ class Register extends Component {
                 valid: null,
                 touched: false
             },
-            repPassword: {
+            password2: {
                 elementType: 'input',
                 elementConfig: {
-                    type: 'text',
+                    type: 'password',
                     placeholder: 'تکرار رمز عبور',
                     spellCheck: false
                 },
@@ -88,76 +116,46 @@ class Register extends Component {
         }
     }
 
-    // componentDidUpdate(prevProps, prevState) {
-    //     if(this.state.formData !== prevState.formData) {
-    //         let validateForm = true;
-    //         for (const formElement in this.state.formData) {
-    //             if(!validateForm) {
-    //                 break;
-    //             }
-    //             if(!this.state.formData[formElement].validity) {
-    //                 continue;
-    //             }
-    //             validateForm = 
-    //                 !!this.state.formData[formElement].valid &&
-    //                 this.state.formData[formElement].valid[0] &&
-    //                 validateForm;
-    //         }
-    //         console.log(validateForm);
-    //         this.setState({formValid: validateForm});
-    //     }
-    // }
+    componentDidMount() {
+        console.log(this.props);
 
-    restructureNumber = num => {
-        if(num < 10) {
-            return '0' + num;
+        if(this.props.match.path === '/account/login') {
+            let email = localStorage.getItem('email');
+            let password = localStorage.getItem('password');
+            
+            this.setState({
+                formState: FORM_STATE.logIn,
+            });
         }
-        return num;
+
+        if(this.props.match.path === '/account/register') {
+            this.setState({
+                formState: FORM_STATE.signUp
+            });
+        }
     }
 
     orderBtnHandler = event => {
         event.preventDefault();
         if(!this.state.formValid) return;
-        this.setState({ loading: true });
 
-        const date = new Date();
-        const time = {
-            hour: this.restructureNumber(date.getHours()),
-            minute: this.restructureNumber(date.getMinutes()),
-            second: this.restructureNumber(date.getSeconds())
-        }
-
-        const clientData = {};
+        const userData = {};
         const formData = this.state.formData;
         for (const elm in formData) {
-            clientData[elm] = formData[elm].value;
+            if(this.state.formState === FORM_STATE.logIn && (elm === 'username' || elm === 'password2')) {
+                continue;
+            }
+            userData[elm] = formData[elm].value;
+        }
+        console.log(userData);
+
+        if(this.state.formState === FORM_STATE.logIn) {
+            this.props.onSubmitLogin(userData);
         }
 
-        const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.totalPrice.toFixed(2),
-            orderDate: `
-                ${date.getDate()} ${MONTHS[date.getMonth()]} ${date.getFullYear()}
-            `,
-            orderTime: `
-                ${time.hour} : ${time.minute} : ${time.second}
-            `,
-            orderData: clientData
-        };
-
-        this.props.onOrderBurger(order, this.props.history);
-
-        // axios.post('/orders.json', order)
-        //     .then(response => {
-        //         this.setState({loading: false});
-        //         console.log(order);
-        //         console.log('this order is sent to firebase');
-        //         this.props.history.replace('/orders');
-        //     })
-        //     .catch(error => {
-        //         this.setState({loading: false});
-        //         // console.log(error);
-        //     });
+        if(this.state.formState === FORM_STATE.signUp) {
+            this.props.onSubmitSignUp(userData);
+        }
     }
 
     checkValidity = (value, rules) => {
@@ -186,7 +184,7 @@ class Register extends Component {
         if(rules.validPassword) {
             valid = PASSWORDREGex.test(value.trim()) && valid;
             if(value.trim().length > 0) {
-                invalidReason = 'رمز عبور باید حداقل 6 کاراکتر که ترکیبی از اعداد و حروف انگلیسی و کاراکترهای @#$%^& باشد';
+                invalidReason = 'رمز عبور باید حداقل 8 کاراکتر که ترکیبی از اعداد و حروف انگلیسی و کاراکترهای @#$%^& باشد';
             }
         }
 
@@ -210,7 +208,10 @@ class Register extends Component {
         formData[elementForm] = formElement;
 
         let formIsValid = true;
-        for(let formKey in formData) {
+        for(const formKey in formData) {
+            if(this.state.formState === FORM_STATE.logIn && (formKey === 'password2' || formKey === 'username')) {
+                continue;
+            }
             if(!formData[formKey].validity) {
                 continue;
             }
@@ -228,11 +229,39 @@ class Register extends Component {
         });
     }
 
+    changeFormState = () => {
+        const formData = {...this.state.formData};
+        for(const formKey in formData) {
+            formData[formKey].value = '';
+            formData[formKey].valid = null;
+        }
+
+        let formState;
+        if(this.state.formState === FORM_STATE.logIn) {
+            formState = FORM_STATE.signUp;
+            this.props.history.replace('/account/register');
+        } else if(this.state.formState === FORM_STATE.signUp) {
+            formState = FORM_STATE.logIn;
+            this.props.history.replace('/account/login');
+        }
+        this.setState({
+            formData: formData,
+            formValid: false,
+            formState: formState
+        });
+    }
+
     render() {
         const formData = this.state.formData;
         const formDataArray = [];
 
         for (const elm in formData) {
+            if(
+                this.state.formState === FORM_STATE.logIn &&
+                (elm === 'username' || elm === 'password2')
+            ) {
+                continue;
+            }
             formDataArray.push({
                 id: elm,
                 config: formData[elm]
@@ -243,6 +272,7 @@ class Register extends Component {
             return (
                 <Input 
                     key={elm.id}
+                    id={elm.id}
                     elementType={elm.config.elementType} 
                     label={elm.config.label}
                     elementConfig={elm.config.elementConfig}
@@ -251,38 +281,65 @@ class Register extends Component {
                     shouldValidate={elm.config.validity}
                     touched={elm.config.touched}
                     changed={event => this.inputChangeHandler(event, elm.id)} />
-                )
+                );
         });
+
+        let formHeader;
+        let buttonText;
+        let formFooterParagraph;
+        let formFooterSpan;
+        if(this.state.formState === FORM_STATE.logIn) {
+            formHeader = FORM_HEADER.logIn ;
+            buttonText = FORM_BUTTON.login;
+            formFooterParagraph = FORM_FOOTER.logIn.paragraph;
+            formFooterSpan = FORM_FOOTER.logIn.span;
+        } else if(this.state.formState === FORM_STATE.signUp) {
+            formHeader = FORM_HEADER.signUp;
+            buttonText = FORM_BUTTON.signup;
+            formFooterSpan = FORM_FOOTER.signUp.span;
+            formFooterParagraph = FORM_FOOTER.signUp.paragraph;
+        }
         
         return(
             <div className={classes.ContactData}>
-                {/* {this.props.loading && <Spinner />} */}
-                <h3>اطلاعات کاربری</h3>
+                {this.props.isAuth && <Redirect to="/dashboard" />}
+                <h3>{formHeader}</h3>
                 <form onSubmit={this.orderBtnHandler}>
                     {form}
                     <button className={classes.Button} disabled={!this.state.formValid}>
-                        عضو شدن
+                        {buttonText}
+                        {this.props.loading && 
+                            <div className={classes.loader}>
+                                <FormLoading />
+                            </div>
+                        }
                     </button>
+                    <p className={classes.FormFooter}>
+                        {formFooterParagraph}
+                        <span onClick={this.changeFormState}>
+                            {formFooterSpan}
+                        </span>
+                    </p>
                 </form>
             </div>
         );
     }
 }
 
-// const mapStateToProps = state => {
-//     return {
-//         ingredients: state.burger.ingredients,
-//         totalPrice: state.burger.totalPrice,
-//         loading: state.order.loading
-//     };
-// };
+const mapStateToProps = state => {
+    return {
+        loading: state.auth.loading,
+        isAuth: state.auth.accessToken !== null
+    };
+};
 
-// const mapDispatchToProps = dispatch => {
-//     return {
-//         onOrderBurger: (orderData, history) => dispatch(actionCreators.purchaseBurger(orderData, history))
-//     };
-// };
+const mapDispatchToProps = dispatch => {
+    return {
+        onSubmitSignUp: (userData) => dispatch(actions.submitSignup(userData)),
+        onSubmitLogin: (userData) => dispatch(actions.submitLogin(userData))
+    };
+};
 
-export default Register;
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
 
 // export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

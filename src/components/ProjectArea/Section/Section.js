@@ -111,7 +111,7 @@ class Section extends Component {
 
 const mapStateToProps = state => {
     return {
-        activeProject: state.activeProject
+        activeProject: state.dashboard.activeProject
     };
 };
 

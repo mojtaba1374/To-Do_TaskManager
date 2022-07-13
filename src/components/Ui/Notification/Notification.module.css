@@ -1,0 +1,45 @@
+.NotificationContainer {
+    position: absolute;
+    top: 70px;
+    left: 0;
+}
+
+.Notification {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color: #999898;
+    width: 40px;
+    height: 40px;
+    background-color: #fff;
+    border: 1px solid rgba(128, 128, 128, 0.411);
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+}
+
+.CounterNotification {
+    position: absolute;
+    background-color: rgb(255, 145, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 16px;
+    font-size: 12px;
+    font-weight: bold;
+    height: 16px;
+    color: rgb(59, 59, 59);
+    border-radius: 50%;
+    top: 0;
+    left: 22px;
+}
+
+.Notification:hover {
+    color: #2c2c2c;
+    border: 1px solid rgb(128, 128, 128);
+    border-left: none;
+}

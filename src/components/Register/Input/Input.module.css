@@ -38,9 +38,10 @@
 }
 
 .InputElement {
+    position: relative;
     display: block;
     box-sizing: border-box;
-    width: 90%;
+    width: 95%;
     margin: auto;
     outline: none;
     border: 1px solid #ccc;
@@ -49,14 +50,8 @@
     padding: 8px 10px;
     padding-left: auto;
     font-family: inherit;
-    /* direction: ltr; */
+    direction: ltr;
     transition: all 0.4s ease-in-out;
-}
-
-@media only screen and (max-width: 600px) {
-    .InputElement {
-        width: 100%;
-    }
 }
 
 .InputElement::placeholder {
@@ -64,10 +59,28 @@
 }
 
 .InvalidInputElement {
-    border: 1px solid rgb(243, 139, 139);
+    border: 1px solid rgb(231, 171, 171);
 }
 
 .InputElement:focus {
     background-color: #e3ece5a2;
 }
 
+.EyeIconContainer {
+    position: absolute;
+    right: 40px;
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+}
+
+@media only screen and (max-width: 600px) {
+    .InputElement {
+        width: 100%;
+    }
+    .EyeIconContainer {
+        right: 25px;
+    }
+}
