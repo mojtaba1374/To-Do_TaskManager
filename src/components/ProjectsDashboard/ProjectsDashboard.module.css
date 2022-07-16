@@ -3,3 +3,13 @@
     background-color: #fff;
     position: relative;
 }
+
+.ShowEmptyNotification {
+    background-color: rgba(54, 54, 52, 0.795);
+    color: rgb(252, 231, 220);
+    margin:  20px auto;
+    padding: 10px 5px;
+    text-align: center;
+    font-weight: bolder;
+    border-radius: 5px;
+}

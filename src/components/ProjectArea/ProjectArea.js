@@ -87,8 +87,10 @@ class ProjectArea extends Component {
             }
         });
         console.log(columns);
+        console.log(this.props.activeProjectId);
         
         return(
+            this.props.activeProjectId ? 
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <div className={classes.ProjectArea}>
                     {columns &&
@@ -104,7 +106,12 @@ class ProjectArea extends Component {
                         );
                     })}
                 </div>
-            </DragDropContext>
+            </DragDropContext>:
+            <div className={classes.EmptyProjectArea}>
+                <p>
+                    پروژه ای را از لیست پروژه های خود انتخاب کنید یا یک پروژه جدید ایجاد کنید
+                </p>
+            </div>
         )
             
     }

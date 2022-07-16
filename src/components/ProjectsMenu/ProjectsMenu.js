@@ -11,10 +11,9 @@ import ProjectSetting from '../ProjectSetting/ProjectSetting';
 import ProjectMembers from '../ProjectMembers/ProjectMembers';
 import ProjectMember from '../ProjectMembers/ProjectMember/ProjectMember';
 
-import axios from 'axios';
-import * as actionTypes from '../../store/actions/actionTypes';
-
 import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
+
 
 class ProjectsMenu extends Component {
 
@@ -24,58 +23,7 @@ class ProjectsMenu extends Component {
         projectMembers: []
     }
 
-    componentDidMount() {
-        let projects = [];
-        let accesToken = this.props.token;
-        if(!accesToken) {
-            accesToken = localStorage.getItem('access');
-        }
-        let config = {
-            method: 'get',
-            url: 'http://localhost:8000/projects/',
-            headers: { 
-              'Authorization': `Bearer ${accesToken}`, 
-              'Content-Type': 'application/json'
-            }
-        };
-        axios(config)
-            .then(response => {
-                console.log(response.data);
-                projects = response.data.map(project => {
-                    return({
-                        [project.id]: {
-                            id: project.id,
-                            projectName: project.name,
-                            confirmed: project.confirmed,
-                            inviter: project.inviter,
-                            columns: {
-                                'column-1': {
-                                  id: 'column-1',
-                                  title: 'برای انجام',
-                                  tasks: [],
-                                },
-                                'column-2': {
-                                  id: 'column-2',
-                                  title: 'در حال انجام',
-                                  tasks: [],
-                                },
-                                'column-3': {
-                                  id: 'column-3',
-                                  title: 'انجام شده',
-                                  tasks: [],
-                                },
-                            }
-                        }
-                    });
-                });
-                this.props.onSetExistProjects(projects);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-
-    addProjectBtnHandler = () => {
+    openAddProjectModal = () => {
         this.setState({ showModal: true });
     }
 
@@ -83,150 +31,38 @@ class ProjectsMenu extends Component {
         this.setState({ showModal: false });
     }
 
-    saveProjectHandler = (prjName) => {
-        let projectId;
-        let accesToken = this.props.token;
-        if(!accesToken) {
-            accesToken = localStorage.getItem('access');
-        }
+    addProjectHandler = (projectName) => {
+        this.setState({ showModal: false });
+        this.props.onAddNewProject(projectName, this.props.token);
+    }
 
-        let data = { name: prjName };
-        let config = {
-            method: 'post',
-            url: 'http://localhost:8000/project/',
-            headers: { 
-              'Authorization': `Bearer ${accesToken}`, 
-              'Content-Type': 'application/json'
-            },
-            data : data
-        };
+    editeProjectName = (projectName) => {
+        this.props.onEditProjectName(projectName, this.props.activeProjectId, this.props.token)
+    }
 
-        axios(config)     // bayad inviter ra tarif konam barash ba etelaate khode shakhs
-            .then(response => {
-                projectId = response.data.id;
-                const project = {
-                    [projectId]: {
-                        id: projectId,
-                        projectName: prjName,
-                        confirmed: true,
-                        
-                        columns: {
-                            'column-1': {
-                              id: 'column-1',
-                              title: 'برای انجام',
-                              tasks: [],
-                            },
-                            'column-2': {
-                              id: 'column-2',
-                              title: 'در حال انجام',
-                              tasks: [],
-                            },
-                            'column-3': {
-                              id: 'column-3',
-                              title: 'انجام شده',
-                              tasks: [],
-                            },
-                        }
-                    }
-                };
-                this.props.onUpdateActiveProject(prjName, projectId);
-                this.props.onUpdateProjectsArray(project);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-
-        this.setState({
-            showModal: false
-        });
+    deleteProjectHandler = () => {
+        this.props.onDeleteProject(this.props.activeProjectId, this.props.token);
     }
 
     changeActiveProject = (activePrjName, id) => {
-        this.props.onUpdateActiveProject(activePrjName, id);
+        this.props.onChangeActiveProject(activePrjName, id);
     }
 
-    settingClickedHandler = (prjName, prjId) => {
-        
-        console.log(prjId);
-        let projectMembers = [];
-        let accesToken = this.props.token;
-        if(!accesToken) {
-            accesToken = localStorage.getItem('access');
-        }
-
-        let config = {
-            method: 'GET',
-            url: `http://localhost:8000/project/${prjId}/members`,
-            headers: { 
-              'Authorization': `Bearer ${accesToken}`, 
-              'Content-Type': 'application/json'
-            }
-        };
-        axios(config)
-            .then(response => {
-                console.log(response.data);
-                projectMembers = response.data
-                this.setState({
-                    projectMembers: projectMembers
-                });
-            })
-            .catch(error => {
-                console.log(error)
-            });
-        this.setState({
-            showSetting: true
-        });
+    settingClickedHandler = (projectId) => {
+        this.props.onShowSettingProjectModal();
+        this.props.onInitializeActiveProjectMembers(projectId, this.props.token);
     }
 
-    closeSettingProjectModal = () => {
-        this.setState({showSetting: false});
+    inviteMember = (userMail) => {
+        this.props.onInviteMember(userMail, this.props.activeProjectId, this.props.token);
     }
 
-    editeProjectName = () => {
-
+    userLeaveProjectHandler = () => {
+        this.props.onUserLeaveProject(this.props.activeProjectId, this.props.token);
     }
 
-    inviteOtherUser = (userMail) => {
-        console.log(userMail);
-        let accesToken = this.props.token;
-        if(!accesToken) {
-            accesToken = localStorage.getItem('access');
-        }
-
-        let data = {
-            "project_id": +this.props.activeProjectId,
-            "user_email": userMail
-        };
-        console.log(data);
-
-        let config = {
-            method: 'post',
-            url: 'http://localhost:8000/project/invite/',
-            headers: { 
-              'Authorization': `Bearer ${accesToken}`, 
-              'Content-Type': 'application/json'
-            },
-            data : data
-        };
-
-        axios(config)
-            .then(response => {
-                const projectMembers = [...this.state.projectMembers];
-                let projecMember = {
-                    confirmed: false,
-                    email: userMail,
-                    "user_role": "User",
-                    username: response.data.username
-                };
-                projectMembers.push(projecMember);
-                this.setState({
-                    projectMembers: projectMembers
-                });
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            })
+    deleteMemberFromProjectHandler = userEmail => {
+        this.props.onDeleteMember(userEmail, this.props.activeProjectId, this.props.token)
     }
 
     render() {
@@ -240,7 +76,7 @@ class ProjectsMenu extends Component {
                 <Project 
                     key={projectId} 
                     projectName={project[projectId].projectName} 
-                    settingClicked={() => this.settingClickedHandler(project[projectId].projectName, projectId)}
+                    settingClicked={() => this.settingClickedHandler(projectId)}
                     selectedProject={
                         () => this.changeActiveProject(project[projectId].projectName, projectId)
                     } 
@@ -248,38 +84,64 @@ class ProjectsMenu extends Component {
             );
         });
 
-        let members = this.state.projectMembers.map(member => {
-            return(
-                <ProjectMember
-                    key={member.username}
-                    userName={member.username}
-                    userEmail={member.email}
-                    memberRole={member['user_role']} />
-            )
+        let userRoleOfActiveProject;
+        this.props.projects.forEach(project => {
+            const projectId = Object.keys(project)[0];
+            if(+projectId === +this.props.activeProjectId) {
+                userRoleOfActiveProject = project[projectId].userRole;
+            }
         });
+
+        let members;
+        if(this.props.activeProjectMembers) {
+            members= this.props.activeProjectMembers.map((member, idx) => {
+                return(
+                    <ProjectMember
+                        key={member.username+ idx}
+                        userName={member.username}
+                        userEmail={member.email}
+                        confirmed={member.confirmed}
+                        userRoleOfActiveProject={userRoleOfActiveProject}
+                        memberRole={member['user_role']}
+                        profileData={this.props.profileData}
+                        clickedDeleteUserBtn={() => this.deleteMemberFromProjectHandler(member.email)} />
+                );
+            });
+        } 
 
         return(
             <div className={classes.ProjectsMenu}>
-                <Backdrop showModal={this.state.showSetting} clickedBackdrop={this.closeSettingProjectModal} />
-                <Modal showModal={this.state.showSetting}>
+                <Backdrop showModal={this.props.showProjectSetting} clickedBackdrop={this.props.onCloseSettingProjectModal} />
+                <Modal showModal={this.props.showProjectSetting}>
                     <ProjectSetting
+                        userRoleOfActiveProject={userRoleOfActiveProject}
                         projectName={this.props.activeProject}
                         clickedEditName={this.editeProjectName}
-                        clickedAddMember={this.inviteOtherUser} />
+                        clickedAddMember={this.inviteMember} />
                     <ProjectMembers>
                         {members}
                     </ProjectMembers>
+                    {userRoleOfActiveProject === 'Admin' &&
+                        <button className={classes.DeleteProjectBtn} onClick={this.deleteProjectHandler}>
+                            حذف پروژه
+                        </button>
+                    }
+                    {userRoleOfActiveProject === 'User' &&
+                        <button className={classes.DeleteProjectBtn} onClick={this.userLeaveProjectHandler}>
+                            ترک گروه
+                        </button>
+                    }
                 </Modal>
                 <Backdrop showModal={this.state.showModal} clickedBackdrop={this.closeAddProjectModal} />
                 <Modal showModal={this.state.showModal}>
                     <CreationProjectForm
                         cancelBtnClicked={this.closeAddProjectModal}
-                        saveBtnClicked={this.saveProjectHandler}
+                        saveBtnClicked={this.addProjectHandler}
                     />
                 </Modal>
                 <div className={classes.ProjectsHeader}>
                     <span>پروژه ها</span>
-                    <AddButton clickeAddBtn={this.addProjectBtnHandler} />
+                    <AddButton clickeAddBtn={this.openAddProjectModal} />
                 </div>
                 <Projects>
                     {projects}
@@ -291,21 +153,28 @@ class ProjectsMenu extends Component {
 
 const mapStateToProps = state => {
     return {
+        projects: state.dashboard.projects,
         activeProject: state.dashboard.activeProject,
         activeProjectId: state.dashboard.activeProjectId,
-        projects: state.dashboard.projects,
+        activeProjectMembers: state.dashboard.activeProjectMembers,
+        profileData: state.dashboard.profileData,
+        showProjectSetting: state.dashboard.showProjectSetting,
         token: state.auth.accessToken
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUpdateActiveProject: 
-            (activePrjName, activePrjId) => dispatch(
-                {type: actionTypes.UPDATE_ACTIVE_PROJECT, activePrjName, activePrjId}
-            ),
-        onUpdateProjectsArray: (project) => dispatch({type: actionTypes.UPDATE_PROJECTS_ARRAY, project}),
-        onSetExistProjects: (projects) => dispatch({type: actionTypes.SET_EXIST_PROJECTS, projects})
+        onAddNewProject: (projectName, accessToken) => dispatch(actions.addNewProject(projectName, accessToken)),
+        onDeleteProject: (projectId, accessToken) => dispatch(actions.deleteProject(projectId, accessToken)),
+        onEditProjectName: (projectName, projectId, accessToken)=> dispatch(actions.editProjectName(projectName, projectId, accessToken)),
+        onShowSettingProjectModal: () => dispatch(actions.showSettingProjectModal()),
+        onCloseSettingProjectModal: () => dispatch(actions.closeSettingProjectModal()),
+        onChangeActiveProject: (projectName, projectId) => dispatch(actions.changeActiveProject(projectName, projectId)),
+        onInitializeActiveProjectMembers: (projectId, token) => dispatch(actions.initializeActiveProjectMembers(projectId, token)),
+        onUserLeaveProject: (projectId, accessToken) => dispatch(actions.userLeaveProject(projectId, accessToken)),
+        onInviteMember: (userMail, projectId, token) => dispatch(actions.inviteMember(userMail, projectId, token)),
+        onDeleteMember: (userEmail, projectId, token) => dispatch(actions.deleteMember(userEmail, projectId, token))
     };
 };
 

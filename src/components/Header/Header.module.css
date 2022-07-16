@@ -1,5 +1,64 @@
 .Header {
+    position: relative;
     width: 100%;
     height: 50px;
-    background-color: gray;
+    background-color: #cbdfdb;
+}
+
+.ProfileIcon {
+    font-size: 30px;
+    position: absolute;
+    left: 25px;
+    height: 30px;
+    color: #5a5a5a;
+    top: 50%;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: all 0.1s ease-in-out;
+}
+
+.ProfileIcon:hover {
+    color: #333333;
+}
+
+.ProfileContainer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 40px;
+    left: 30px;
+    min-width: 200px;
+    padding: 4px;
+    border-radius: 4px 15px 4px 15px;
+    background-color: rgb(247, 247, 247);
+    box-shadow: 0 0 5px gray;
+    z-index: 1000;
+}
+
+.ProfileContainer > div {
+    height: 40px;
+}
+
+.ProfileContainer > div:not(:last-child) {
+    border-bottom: 1px solid rgba(128, 128, 128, 0.24);
+}
+
+.UserName, .Email, .Logout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Logout {
+    transition: all 0.2s ease-out;
+    cursor: pointer;
+}
+
+.Logout p {
+    margin: 5px;
+}
+
+.Logout:hover {
+    color: rgb(255, 8, 8);
+    transform: perspective(10deg);
 }

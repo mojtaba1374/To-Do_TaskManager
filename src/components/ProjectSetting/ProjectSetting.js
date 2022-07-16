@@ -36,14 +36,17 @@ class ProjectSetting extends Component {
 
     render() {
         return (
+            this.props.userRoleOfActiveProject === 'Admin' ?
             <div className={classes.SettingContainer}>
                 <h3 style={{textAlign: 'right'}}>مدیریت پروژه</h3>
                 <div className={classes.ProjectNameContainer}>
                     <div className={classes.NameInputContainer}>
                         <input type="text" placeholder="اسم پروژه" spellCheck="false" 
-                               value={this.state.name} 
-                               onChange={event => this.nameChangeHandler(event)} />
-                        <button disabled={this.state.name.trim().length === 0} onClick={this.props.clickedEditName}>
+                            value={this.state.name} 
+                            onChange={event => this.nameChangeHandler(event)} />
+                        <button 
+                            disabled={this.state.name.trim().length === 0} 
+                            onClick={() => this.props.clickedEditName(this.state.name.trim())}>
                             تایید
                         </button>
                     </div>
@@ -59,7 +62,8 @@ class ProjectSetting extends Component {
                         اضافه
                     </button> 
                 </div>
-            </div>
+            </div> :
+            <h3 style={{textAlign: 'right', paddingRight: '40px'}}>اعضای تیم پروژه</h3>
         );
     }
 }

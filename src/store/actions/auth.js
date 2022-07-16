@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios from '../../axios';
 
 const submitFormStart = () => {
     return {
@@ -23,7 +23,7 @@ export const submitSignup = (data) => {
     
     return dispatch => {
         dispatch(submitFormStart());
-        axios.post('http://127.0.0.1:8000/api/register/', data)
+        axios.post('/api/register/', data)
                 .then(response => {
                     // console.log(response.data);  // {username: 'mojtaba', email: 'mojtaba@gmail.com'}
                     dispatch(successSignup());
@@ -73,7 +73,7 @@ export const submitLogin = (userData) => {
     
     return dispatch => {
         dispatch(submitFormStart());
-        axios.post('http://127.0.0.1:8000/api/token/', userData)
+        axios.post('/api/token/', userData)
             .then(response => {
                 // const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
                 console.log(response.data);
@@ -81,10 +81,10 @@ export const submitLogin = (userData) => {
                 localStorage.setItem('refresh', response.data.refresh);
                 localStorage.setItem('email', userData.email);
                 localStorage.setItem('password', userData.password);
+                // axios.defaults.headers.common['Authorization'] = `bearer ${response.data.token}`;
                 dispatch(successLogin(response.data));
                 // localStorage.setItem('expirationDate', expirationDate);
                 // dispatch(checkExpirationToken());  // bara inke bade expire shodan token log out shavad(bayad karbar ra bargardanim be safhe login)
-                // axios.defaults.headers.common['Authorization'] = `bearer ${response.data.token}`;
             })
             .catch(error => {
                 console.log(error);

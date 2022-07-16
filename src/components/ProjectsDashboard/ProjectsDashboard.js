@@ -10,72 +10,47 @@ import Notification from '../Ui/Notification/Notification';
 import NotificationMenu from '../NotificationMenu/NotificationMenu';
 import NotificationItem from '../NotificationMenu/NotificationItem/NotificationItem';
 
-import axios from 'axios';
-
-import * as actionTypes from '../../store/actions/actionTypes';
+import * as actions from '../../store/actions/index'
 
 
 class ProjectsDashboard extends Component {
 
     state = {
-        showNotification: false
+        showProfile: false
+    }
+
+    componentDidMount() {
+        this.props.onSetExistProjects(this.props.access);
+        this.props.onGetUserProfileDat(this.props.access);
     }
 
     showNotificationHandler = () => {
-        this.setState({
-            showNotification: true
-        });
-    }
-
-    closeNotificationHandler = () => {
-        this.setState({
-            showNotification: false
-        });
-    }
-
-    confirmedHandler = (projectName, projectId) => {
-        
-        let accesToken = this.props.token;
-        if(!accesToken) {
-            accesToken = localStorage.getItem('access');
-        }
-
-        const data = {
-            "project_id": projectId,
-            "confirmed": true
-        }
-
-        let config = {
-            method: 'post',
-            url: 'http://localhost:8000/project/invite/answer/',
-            headers: { 
-              'Authorization': `Bearer ${accesToken}`, 
-              'Content-Type': 'application/json'
-            },
-            data: data
-        };
-        console.log('confirmed');
-        axios(config)
-            .then(response => {
-                
-                this.props.onUpdateConfirmedProject(projectId);
-                this.props.onUpdateActiveProject(projectName, projectId);
-                this.props.onUpdateNotifCounter();
-                this.closeNotificationHandler();
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        this.props.onOpenNotificationStatus();
     }
     
-    rejectedHandler = () => {
-        console.log('rejected');
+    closeNotificationHandler = () => {
+        this.props.onCloseNotificationStatus();
+    }
+
+    confirmedInviteHandler = (projectName, projectId) => {
+        this.props.onConfirmedInvite(projectName, projectId, this.props.access);
+    }
+    
+    rejectedInviteHandler = (projectId) => {
+        this.props.onInconfirmedInvite(projectId, this.props.access);
+    }
+
+    toggleUserProfile = () => {
+        this.setState(prevState => {
+            return {
+                showProfile: !prevState.showProfile
+            };
+        });
     }
 
     render() {
         let counter = 0;
-        const inconfirmedProjects = this.props.projects.map(project => {
+        const inconfirmedProjects = this.props.projects.map((project, idx) => {
             let projectId = Object.keys(project)[0];
             if(project[projectId].confirmed === true) {
                 return null;
@@ -83,21 +58,29 @@ class ProjectsDashboard extends Component {
             counter++;
             return (
                 <NotificationItem 
-                    key={project[projectId].inviter.username}
+                    key={project[projectId].inviter.username + idx}
                     inviterUsername={project[projectId].inviter.username} 
                     projectName={project[projectId].projectName}
-                    clickedConfirmed={() => this.confirmedHandler(project[projectId].projectName, projectId)}
-                    clickedRejected={() => this.rejectedHandler(projectId)} />
+                    clickedConfirmed={() => this.confirmedInviteHandler(project[projectId].projectName, projectId)}
+                    clickedRejected={() => this.rejectedInviteHandler(projectId)} />
             );
         });
 
         return(
             <>
-                <Header />
+                <Header 
+                    showProfile={this.state.showProfile}
+                    username={this.props.profileData && this.props.profileData.username}
+                    email={this.props.profileData && this.props.profileData.email}
+                    clickedProfile={this.toggleUserProfile}>
+                </Header>
                 <div className={classes.ProjectsDashboard}>
-                    {this.state.showNotification && 
+                    {this.props.showNotification && 
                         <NotificationMenu clickedCloseNotification={this.closeNotificationHandler}>
-                            {inconfirmedProjects}
+                            {counter === 0 ?
+                                <p className={classes.ShowEmptyNotification}>پیغامی برای هم گروهی شدن ندارید</p> :
+                                inconfirmedProjects
+                            }
                         </NotificationMenu>
                     }
                     <ProjectsMenu />
@@ -114,19 +97,21 @@ class ProjectsDashboard extends Component {
 const mapStateToProps = state => {
     return {
         projects: state.dashboard.projects,
-        notifCounter: state.dashboard.notifCounter
+        notifCounter: state.dashboard.notifCounter,
+        showNotification: state.dashboard.showNotification,
+        profileData: state.dashboard.profileData,
+        access: state.auth.accessToken
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onUpdateConfirmedProject: 
-            projectId => dispatch({type: actionTypes.UPDATE_CONFIRMED_PROJECT, projectId}),
-        onUpdateActiveProject: 
-            (activePrjName, activePrjId) => dispatch(
-                {type: actionTypes.UPDATE_ACTIVE_PROJECT, activePrjName, activePrjId}
-            ),
-        onUpdateNotifCounter: () => dispatch({type: actionTypes.UPDATE_NOTIF_COUNTER})
+        onSetExistProjects: accessToken => dispatch(actions.setExistProjects(accessToken)),
+        onGetUserProfileDat: () => dispatch(actions.getUserProfileData()),
+        onOpenNotificationStatus: () => dispatch(actions.openNotificationStatus()),
+        onCloseNotificationStatus: () => dispatch(actions.closeNotificationStatus()),
+        onConfirmedInvite: (projectName, projectId, token) => dispatch(actions.confirmedInvite(projectName, projectId, token)),
+        onInconfirmedInvite: (projectI, token) => dispatch(actions.inconfirmedInvite(projectI, token))
     };
 };
 

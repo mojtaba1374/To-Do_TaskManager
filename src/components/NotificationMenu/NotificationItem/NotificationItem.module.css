@@ -1,9 +1,9 @@
 .NotificationItem {
-    text-align: center;
-    width: 95%;
+    width: 99%;
     /* border: 1px solid red; */
-    background-color: #fff8d1;
-    border-radius: 10px;
+    background-color: #f8f6e9;
+    border-radius: 4px 10px 4px 10px;
+    box-shadow: 0 0 2px gray;
     margin: 5px auto;
     padding: 5px;
 }

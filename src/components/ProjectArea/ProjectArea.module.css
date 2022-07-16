@@ -27,3 +27,14 @@
 .ProjectArea::-webkit-scrollbar-thumb:hover {
     background: rgb(153, 153, 153);
 }
+
+.EmptyProjectArea {
+    margin: 150px auto auto;
+    font-size: 24px;
+    text-align: center;
+    background-color: rgba(230, 233, 222, 0.904);
+    color: rgb(97, 67, 67);
+    border-radius: 20px;
+    padding: 10px;
+    max-width: 500px;   
+}
