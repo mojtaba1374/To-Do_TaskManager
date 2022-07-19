@@ -1,39 +1,44 @@
 .NotificationItem {
     width: 99%;
     /* border: 1px solid red; */
-    background-color: #f8f6e9;
-    border-radius: 4px 10px 4px 10px;
-    box-shadow: 0 0 2px gray;
-    margin: 5px auto;
-    padding: 5px;
+    /* background-color: #fff; */
+    border-radius: 5px;
+    box-shadow: 0 0 2px #808080;
+    margin: 10px auto;
+    padding: 10px;
+    box-shadow: 0 0 8px rgb(116, 116, 116);
+    border: none;
 }
 
 .NotificationItem p {
     margin: 5px 0;
+    word-break: break-all;
 }
 
 .NotificationItem button {
-    width: 70px;
+    width: 60px;
     padding: 3px;
     margin: 5px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease-out;
 }
 
 .NotificationItem .ConfirmedBtn {
-    background-color: #2ddce9;
+    background-color: #27c3ce;
+    color: #fff;
 }
 
 .NotificationItem .ConfirmedBtn:hover {
-    background-color: #27c3ce;
+    background-color: #36a9b1;
 }
 
 .NotificationItem .RejectedBtn {
-    background-color: #e69e75;
+    background-color: #e96351;
+    color: #fff;
 }
 
 .NotificationItem .RejectedBtn:hover {
-    background-color: #d38f68;
+    background-color: #da422f;
 }

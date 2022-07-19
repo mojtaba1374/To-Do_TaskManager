@@ -1,5 +1,5 @@
 .ProjectArea {
-    background-color: #fff;
+    background-color: #ffffff;
     width: calc(100% - 230px);
     height: calc(100vh - 50px);
     display: flex;
@@ -32,8 +32,8 @@
     margin: 150px auto auto;
     font-size: 24px;
     text-align: center;
-    background-color: rgba(230, 233, 222, 0.904);
-    color: rgb(97, 67, 67);
+    box-shadow: 0 0 5px #ccc;
+    color: #23bb3c;
     border-radius: 20px;
     padding: 10px;
     max-width: 500px;   

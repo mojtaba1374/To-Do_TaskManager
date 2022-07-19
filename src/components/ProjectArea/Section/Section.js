@@ -1,17 +1,25 @@
 import React, { Component } from 'react';
 import classes from './Section.module.css';
 
-import CreationTask from '../CreationTask/CreationTask';
-import TaskCreator from '../CreationTask/TaskCreator/TaskCreator';
-// import Task from '../CreatedTask/CreatedTask';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 import { connect } from 'react-redux';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import * as actions from '../../../store/actions/index';
+
+import CreationTask from '../CreationTask/CreationTask';
+import TaskCreator from '../CreationTask/TaskCreator/TaskCreator';
+import Task from '../Task/Task';
+import Backdrop from '../../Ui/Backdrop/Backdrop'; 
+import Modal from '../../Ui/Modal/Modal';
+import TaskEditor from '../Task/TaskEditor/TaskEditor';
+
 
 class Section extends Component {
 
     state = {
-        addingTask: false
+        addingTask: false,
+        taskEditor: false,
+        taskClicked: null
     }
 
     addingNewTaskHandler = (disableAdding) => {
@@ -25,18 +33,29 @@ class Section extends Component {
         this.setState({ addingTask: false });
     }
 
-
     saveTaskHandler = (event, taskContent) => {
 
-        if(taskContent.trim().length <= 0) {
+        if(taskContent.trim().length === 0) {
             event.preventDefault();
         } else {
-            this.props.onAddToDoTaskForActiveProject(taskContent);
+            this.props.onCreateTodoTask(taskContent, this.props.activeProjectId, this.props.accessToken);
 
+            // bayad yek loader dashte basham va vaghti ke success bod action bala adding task ra bebandad.
             this.setState({
                 addingTask: false
             });
         }
+    }
+
+    openTaskEditor = (task) => {
+        this.setState({
+            taskEditor: true,
+            taskClicked: task
+        });
+    }
+    
+    closeTaskEditor = () => {
+        this.setState({taskEditor: false});
     }
 
     render() {
@@ -55,16 +74,65 @@ class Section extends Component {
         if(this.props.sectionName === 'برای انجام' && this.state.addingTask) {
             addingTask = (
                 <TaskCreator 
-                            clickedCancelBtn={this.cancelCreationTaskHandler}
-                            clickedSaveBtn={this.saveTaskHandler} />
+                    clickedCancelBtn={this.cancelCreationTaskHandler}
+                    clickedSaveBtn={this.saveTaskHandler} />
             );
         }
 
-        // const taskClasses = [classes.Task];
-        // const taskDraggingClasses = [classes.task, classes.TaskDragging];
+        let tasks = (
+            this.props.tasks.map((task, index) => {
+                return (
+                    <Draggable key={task.id} draggableId={`${task.id}`} index={index}>
+                        {(draggableProvided, draggableSnapshot) => {
+                            const style = {
+                                boxShadow: draggableSnapshot.isDragging ? '0 0 5px rgba(0, 0, 0, 0.6)' : '0 0 3px rgba(0, 0, 0, 0.6)',
+                                fontSize: '16px',
+                                width: '95%',
+                                minHeight: '60px',
+                                textOverflow: 'ellipsis',
+                                wordWrap: 'breakWord',
+                                margin: '15px auto',
+                                overflow: 'hidden',
+                                borderRadius: '6px 6px 3px 3px',
+                                cursor: 'pointer',
+                                backgroundColor: '#ffffff',
+                                ...draggableProvided.draggableProps.style,
+                            };
+                            return (
+                                <div 
+                                    ref={draggableProvided.innerRef}
+                                    {...draggableProvided.draggableProps}
+                                    {...draggableProvided.dragHandleProps}
+                                    style={style}
+                                >
+                                    <Task 
+                                        title={task.title}
+                                        percentage={60}
+                                        clickedTask={() => this.openTaskEditor(task)} />
+                                </div>
+                            )
+                        }}
+                    </Draggable>
+                )
+            })
+        );
 
+        const modal = (
+            <>
+                <Backdrop showModal={this.state.taskEditor} clickedBackdrop={this.closeTaskEditor} />
+                <Modal showModal={this.state.taskEditor}>
+                    {this.state.taskClicked &&
+                        <TaskEditor
+                            task={this.state.taskClicked}
+                            closeTaskEditor={this.closeTaskEditor} />
+                    }
+                </Modal>
+            </>
+        )
+        
         return (
             <div className={classes.Section}>
+                {modal}
                 <div className={classes.SectionHeader}>
                     <div>
                         {this.props.sectionName}
@@ -76,30 +144,8 @@ class Section extends Component {
                         <div className={classes.SectionTasks}
                             ref={droppableProvided.innerRef}
                             {...droppableProvided.droppableProps}
-                        >
-                            {
-                                this.props.tasks.map((task, index) => {
-                                    const taskId = Object.keys(task)[0];
-                                    return (
-                                        <Draggable key={taskId} draggableId={`${taskId}`} index={index}>
-                                            {(draggableProvided, draggableSnapshot) => (
-                                                <div 
-                                                    className={draggableSnapshot.isDragging ? classes.DraggingTask : classes.Task}
-                                                    ref={draggableProvided.innerRef}
-                                                    {...draggableProvided.draggableProps}
-                                                    {...draggableProvided.dragHandleProps}
-                                                >
-                                                    {task[taskId].name}
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                        // <Task 
-                                        //     key={taskId}
-                                        //     title={task[taskId].name}
-                                        //     section={task[taskId].section} />
-                                    )
-                                })
-                            }
+                        >    
+                            {tasks}
                             {addingTask}
                         </div>
                     )}
@@ -111,14 +157,15 @@ class Section extends Component {
 
 const mapStateToProps = state => {
     return {
-        activeProject: state.dashboard.activeProject
+        activeProjectId: state.dashboard.activeProjectId,
+        activeProject: state.dashboard.activeProject,
+        accessToken: state.auth.accessToken
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddToDoTaskForActiveProject: 
-            taskContent => dispatch({type: 'ADD_TODO_TASK_FOR_ACTIVE_PROJECT',taskContent: taskContent })
+        onCreateTodoTask: (taskTitle, activeProjectId, accessToken) => dispatch(actions.createTodoTask(taskTitle, activeProjectId, accessToken)),
     };
 };
 

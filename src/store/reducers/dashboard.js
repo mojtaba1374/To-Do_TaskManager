@@ -288,29 +288,35 @@ const reducer = (state = initialState, action) => {
                 loading: false
             };
             break;
-        case 'ADD_TODO_TASK_FOR_ACTIVE_PROJECT':
-            const updatedProjects = [...state.projects];
-
-            updatedProjects.forEach(project => {
-                let prjId = +Object.keys(project)[0];
-                if(prjId === +state.activeProjectId) {
-                    project[prjId].columns['column-1'].tasks.push({
-                        [Math.random() + action.taskContent]: {
-                            id: prjId + action.taskContent,
-                            name: action.taskContent,
-                            column: 'column-1'
-                        }
-                    });
-                }
-            });
-
+        case actionTypes.START_CREATE_TODO_TASK:
             updatedState = {
                 ...state,
-                projects: updatedProjects
+                loading: true
             };
             break;
-        case 'DRAG_TASK_IN_SAME_COLUMN':
-            // console.log(action.newTasksArr);
+        case actionTypes.SUCCESS_CREATE_TODO_TASK:
+            const copiiedProjects = [...state.projects];
+            
+            copiiedProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    project[prjId].columns['column-1'].tasks = 
+                        [...project[prjId].columns['column-1'].tasks.concat(action.task)];
+                }
+            });
+            updatedState = {
+                ...state,
+                loading: false,
+                projects: copiiedProjects
+            };
+            break;
+        case actionTypes.FAIL_CREATE_TODO_TASK:
+            updatedState = {
+                ...state,
+                loading: false
+            };
+            break;
+        case actionTypes.SUCCESS_DRAG_TASK_SAME_COLUMN:
             const updateProjects = [...state.projects];
 
             updateProjects.forEach(project => {
@@ -321,7 +327,7 @@ const reducer = (state = initialState, action) => {
                         ...project[prjId].columns,
                         [action.newColumn.id]: action.newColumn
                     }
-                    console.log(project);
+                    // console.log(project);
                 }
             });
             updatedState = {
@@ -329,17 +335,37 @@ const reducer = (state = initialState, action) => {
                 projects: updateProjects
             };
             break;
-        case 'DRAG_TASK_IN_OTHER_COLUMN':
-            const copyProjects = [...state.projects];
+        case actionTypes.FAIL_DRAG_TASK_SAME_COLUMN:
+            const updatingProjects = [...state.projects];
 
-            copyProjects.forEach(project => {
+            updatingProjects.forEach(project => {
                 let prjId = +Object.keys(project)[0];
                 if(prjId === +state.activeProjectId) {
                     // console.log(action.newColumn.id);
                     project[prjId].columns = {
                         ...project[prjId].columns,
-                        [action.newStartCol.id]: action.newStartCol,
-                        [action.newEndCol.id]: action.newEndCol,
+                        [action.sourceCol.id]: action.sourceCol
+                    }
+                    // console.log(project);
+                }
+            });
+            updatedState = {
+                ...state,
+                projects: updatingProjects
+            };
+            break;
+        case actionTypes.SUCCESS_DRAG_TASK_OTHER_COLUMN:
+            const copyProjects = [...state.projects];
+
+            copyProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    console.log(action.newStartColumn);
+                    // console.log(action.newColumn.id);
+                    project[prjId].columns = {
+                        ...project[prjId].columns,
+                        [action.newStartColumn.id]: action.newStartColumn,
+                        [action.newEndColumn.id]: action.newEndColumn,
                     }
                 }
             });
@@ -348,10 +374,24 @@ const reducer = (state = initialState, action) => {
                 projects: copyProjects
             };
             break;
-        case 'UPDATE_NOTIF_COUNTER':
+        case actionTypes.FAIL_DRAG_TASK_OTHER_COLUMN:
+            const copyyProjects = [...state.projects];
+
+            copyyProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    console.log(action.newStartColumn);
+                    // console.log(action.newColumn.id);
+                    project[prjId].columns = {
+                        ...project[prjId].columns,
+                        [action.sourceStartCol.id]: action.sourceStartCol,
+                        [action.sourceEndCol.id]: action.sourceEndCol,
+                    }
+                }
+            });
             updatedState = {
                 ...state,
-                notifCounter: state.notifCounter - 1
+                projects: copyyProjects
             };
             break;
         default:

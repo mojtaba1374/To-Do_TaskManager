@@ -1,10 +1,12 @@
 .ProjectItem {
-    padding: 5px 10px 5px 5px;
+    padding: 5px 10px 5px 25px;
+    max-width: 250px;
     position: relative;
     margin: 5px 0;
-    border-right: 5px solid #dd4b39;
-    border-radius: 10px 5px 5px 10px;
+    border-right: 5px solid #bdbdbd;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
     transition: all 0.2s ease-in-out;
 }
 
@@ -17,22 +19,27 @@
     height: 16px;
     top: 50%;
     font-size: 16px;
-    opacity: 0.1;
+    opacity: 0;
     z-index: 5;
     transform: translateY(-50%);
     transition: all 0.3s ease-out;
 }
 
-.SettingIcon:hover {
-    opacity: 0.5;
+.ProjectItem:hover .SettingIcon {
+    opacity: 0.3;
+}
+
+.ProjectItem:hover .SettingIcon:hover {
+    opacity: 0.8;
 }
 
 .ActivaProject {
-    border-right: 15px solid rgb(57, 177, 41);
-    background-color: rgba(65, 177, 50, 0.288);
+    border-color: #23bb3c;
+    background-color: #eeeeee;
+    border-radius: 6px 0 0 6px;
 }
 
-
 .ProjectItem:hover {
-    box-shadow: 0 0 4px rgb(57, 177, 41);
+    background-color: #eeeeee;
+    border-radius: 6px 0 0 6px;
 }

@@ -2,62 +2,28 @@
 .Section {
     min-width: 250px;
     height: 98%;
+    
     /* background-color: rgb(221, 221, 221); */
     padding: 5px;
-    border: 1px solid rgba(238, 238, 238, 0.918);
-    border-radius: 10px;
+    /* border: 1px solid rgba(238, 238, 238, 0.918); */
+    /* box-shadow: 0 0 3px #ccc; */
+    /* border-radius: 10px; */
 }
 
 @media only screen and (min-width: 900px) {
     .Section {
-        width: 300px;
+        width: 350px;
     }
 }
-
-/* Task styles */
-.Task {
-    width: 95%;
-    min-height: 60px;
-    margin: 10px auto;
-    background-color: #b3e2e4;
-    /* border: 1px solid gray; */
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    overflow: hidden;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-}
-
-.DraggingTask {
-    width: 95%;
-    min-height: 60px;
-    margin: 10px auto;
-    background-color: #b3e2e4;
-    /* border: 1px solid gray; */
-    text-overflow: ellipsis;
-    word-wrap: break-word;
-    overflow: hidden;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s ease-out;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
-}
-
-.Task:hover {
-    box-shadow: 0 0 10px rgb(102, 102, 102);
-}
-
 
 /* sectio Header style */
 .SectionHeader {
     text-align: center;
     position: relative;
+    font-weight: bold;
     margin: 0;
     padding-bottom: 9px;
-    border-bottom: 2px solid rgb(197, 196, 196);
+    border-bottom: 2px solid rgb(236, 236, 236);
 }
 
 /* tasks container style */
@@ -76,19 +42,19 @@
 }
 
 .SectionTasks::-webkit-scrollbar-track {
-    background: #e6e6e6;
+    background: #f1f1f1;
     border-radius: 15px;
 }
 
 .SectionTasks::-webkit-scrollbar-thumb {
-    background: #c4c4c4;
+    background: #dbdbdb;
     border-radius: 10px;
 }
 
 .SectionTasks::-webkit-scrollbar-thumb:hover {
-    background: rgb(153, 153, 153);
-  }
-
-.SectionTasks:hover {
-    background-color: rgba(233, 232, 232, 0.384);
+    background: rgb(180, 180, 180);
 }
+
+/* .SectionTasks:hover {
+    background-color: rgba(233, 232, 232, 0.384);
+} */

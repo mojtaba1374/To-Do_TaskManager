@@ -20,5 +20,8 @@ export {
     confirmedInvite,
     inconfirmedInvite,
     openNotificationStatus,
-    closeNotificationStatus
+    closeNotificationStatus,
+    createTodoTask,
+    dragTaskSameColumn,
+    dragTaskOtherColumn
 } from './dashboard';

@@ -9,6 +9,8 @@ import { Provider } from 'react-redux/es/exports';
 import dashboardReducer from './store/reducers/dashboard';
 import authReducer from './store/reducers/auth';
 
+import './fonts/Farsi-Digits/Samim-Bold-FD.ttf';
+
 const reducer = combineReducers({
   dashboard: dashboardReducer,
   auth: authReducer

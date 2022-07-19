@@ -3,12 +3,11 @@ import classes from './ProjectArea.module.css';
 
 import Section from './Section/Section';
 
-import { connect } from 'react-redux/es/exports';
-
 import { DragDropContext } from 'react-beautiful-dnd';
 
-import * as actionTypes from '../../store/actions/actionTypes';
-// import axios from 'axios';
+import { connect } from 'react-redux/es/exports';
+import * as actions from '../../store/actions/index';
+
 
 class ProjectArea extends Component {
 
@@ -45,23 +44,38 @@ class ProjectArea extends Component {
         console.log(sourceCol.tasks);
 
         if (sourceCol.id === destinationCol.id) {
-        
+            
+            let draggedTaskId;
+            let newPosition = destination.index;
+            let destinationColumn = destination.droppableId;
             const newTasks = Array.from(sourceCol.tasks);
             const [removed] = newTasks.splice(source.index, 1);
             newTasks.splice(destination.index, 0, removed);
+            draggedTaskId = removed.id;
             const newColumn = {
               ...sourceCol,
               tasks: newTasks,
             };
-            // mitavan payload haye index , columni ke hast ham gozasht baraye ferestadan be backend
-            this.props.onDragTaskInSameColumn(newColumn);  // dispatching action for reordering in same column
-    
+            
+            this.props.onDragTaskSameColumn(
+                draggedTaskId,
+                newPosition, 
+                destinationColumn, 
+                newColumn, 
+                this.props.accessToken,
+                sourceCol
+            )
           return;
         }
     
         // If the user moves from one column to another
+        let draggedTaskId;
+        let newPosition = destination.index;
+        let destinationColumn = destination.droppableId;
+
         const startTasks = Array.from(sourceCol.tasks);
         const [removed] = startTasks.splice(source.index, 1);
+        draggedTaskId = removed.id;
         const newStartCol = {
           ...sourceCol,
           tasks: startTasks,
@@ -74,37 +88,48 @@ class ProjectArea extends Component {
           tasks: endTasks,
         };
         // mitavan payload haye index , columni ke hast va mikhad bere ra ham gozasht baraye ferestadan be backend
-        this.props.onDragTaskInOtherColumn(newStartCol, newEndCol);
+        // this.props.onDragTaskInOtherColumn(newStartCol, newEndCol);
+        this.props.onDragTaskOtherColumn(
+            draggedTaskId,
+            newPosition,
+            destinationColumn,
+            newStartCol, 
+            newEndCol, 
+            this.props.accessToken,
+            sourceCol,
+            destinationCol
+        );
     };
 
     render() {
 
-        let columns;
+        let columns = null;
         this.props.projects.forEach(project => {
             const projectId = Object.keys(project)[0];
             if(+projectId === +this.props.activeProjectId) {
                 columns = project[projectId].columns;
             }
         });
-        console.log(columns);
-        console.log(this.props.activeProjectId);
+        console.log(this.props.projects);
+
+        const sections = columns &&
+            Object.keys(columns).map(col => {
+                const column = columns[col];
+                const tasks = column.tasks;
+                return (
+                    <Section 
+                        key={col} 
+                        sectionName={column.title}
+                        column={column}
+                        tasks={tasks} />
+                );
+            });
         
         return(
             this.props.activeProjectId ? 
             <DragDropContext onDragEnd={this.onDragEnd}>
                 <div className={classes.ProjectArea}>
-                    {columns &&
-                    Object.keys(columns).map(col => {
-                        const column = columns[col];
-                        const tasks = column.tasks;
-                        return (
-                            <Section 
-                                key={col} 
-                                sectionName={column.title}
-                                column={column}
-                                tasks={tasks} />
-                        );
-                    })}
+                    {sections}
                 </div>
             </DragDropContext>:
             <div className={classes.EmptyProjectArea}>
@@ -113,7 +138,6 @@ class ProjectArea extends Component {
                 </p>
             </div>
         )
-            
     }
 }
 
@@ -121,18 +145,21 @@ const mapStateToProps = state => {
     return {
         activeProject: state.dashboard.activeProject,
         activeProjectId: state.dashboard.activeProjectId,
-        projects: state.dashboard.projects
+        projects: state.dashboard.projects,
+        accessToken: state.auth.accessToken
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onAddToDoTaskForActiveProject:
-            (taskContent) => dispatch({type: actionTypes.ADD_TODO_TASK_FOR_ACTIVE_PROJECT, taskContent}),
-        onDragTaskInSameColumn:
-            newColumn => dispatch({type: actionTypes.DRAG_TASK_IN_SAME_COLUMN, newColumn}),
-        onDragTaskInOtherColumn: 
-            (newStartCol, newEndCol) => dispatch({type: actionTypes.DRAG_TASK_IN_OTHER_COLUMN, newStartCol, newEndCol})
+        onDragTaskSameColumn: (taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol) =>
+            dispatch(actions.dragTaskSameColumn(taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol)),
+        // onDragTaskInSameColumn:
+        //     newColumn => dispatch({type: actionTypes.DRAG_TASK_IN_SAME_COLUMN, newColumn}),
+        onDragTaskOtherColumn: (taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol) =>
+            dispatch(actions.dragTaskOtherColumn(taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol)),
+        // onDragTaskInOtherColumn: 
+        //     (newStartCol, newEndCol) => dispatch({type: actionTypes.DRAG_TASK_IN_OTHER_COLUMN, newStartCol, newEndCol})
     };
 };
 

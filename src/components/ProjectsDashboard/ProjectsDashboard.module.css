@@ -5,8 +5,8 @@
 }
 
 .ShowEmptyNotification {
-    background-color: rgba(54, 54, 52, 0.795);
-    color: rgb(252, 231, 220);
+    background-color: rgba(206, 206, 206, 0.795);
+    color: #222222;
     margin:  20px auto;
     padding: 10px 5px;
     text-align: center;

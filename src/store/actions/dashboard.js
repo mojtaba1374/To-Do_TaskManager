@@ -1,6 +1,12 @@
 import * as actionTypes from './actionTypes';
 import axios from '../../axios';
 
+const TASK_PHASE = {
+    todo: 'TODO',
+    doing: 'DOING',
+    done: 'DONE'
+};
+
 // GET USER PROFILE DATA
 
 const successGetUserProfileData = (profileData) => {
@@ -71,6 +77,7 @@ export const setExistProjects = accessToken => {
         
         dispatch(startInitializeProjects());
         let projects = [];
+
         let accesToken = accessToken;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
@@ -84,7 +91,23 @@ export const setExistProjects = accessToken => {
         };
         axios(config)
             .then(response => {
+                console.log(response.data);
                 projects = response.data.map(project => {
+
+                    const todoTasks = [];
+                    const doingTasks = [];
+                    const doneTasks = [];
+
+                    project.tasks.forEach(task => {
+                        if(task.phase === TASK_PHASE.todo) {
+                            todoTasks.push(task);
+                        } else if(task.phase === TASK_PHASE.doing) {
+                            doingTasks.push(task);
+                        } else if(task.phase === TASK_PHASE.done) {
+                            doneTasks.push(task);
+                        }
+                    });
+                    // console.log(project.tasks);
                     return({
                         [project.id]: {
                             id: project.id,
@@ -96,17 +119,17 @@ export const setExistProjects = accessToken => {
                                 'column-1': {
                                   id: 'column-1',
                                   title: 'برای انجام',
-                                  tasks: [],
+                                  tasks: todoTasks,
                                 },
                                 'column-2': {
                                   id: 'column-2',
                                   title: 'در حال انجام',
-                                  tasks: [],
+                                  tasks: doingTasks,
                                 },
                                 'column-3': {
                                   id: 'column-3',
                                   title: 'انجام شده',
-                                  tasks: [],
+                                  tasks: doneTasks,
                                 },
                             }
                         }
@@ -166,8 +189,7 @@ export const addNewProject = (projectName, accessToken) => {
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
         }
-        console.log(projectName);
-        console.log(accessToken);
+        
         let data = { name: projectName };
         let config = {
             method: 'post',
@@ -672,6 +694,185 @@ export const inconfirmedInvite = (projectId, token) => {
             })
             .catch(error => {
                 dispatch(failInconfirmedInvite());
+                console.log(error);
+            });
+    };
+};
+
+// CREATE TODO TASK TO ACTIVE PROJECT
+
+const startCreateTodoTask = () => {
+    return {
+        type: actionTypes.START_CREATE_TODO_TASK
+    };
+};
+
+const successCreateTodoTask = task => {
+    return {
+        type: actionTypes.SUCCESS_CREATE_TODO_TASK,
+        task: task
+    };
+};
+
+const failCreateTodoTask = () => {
+    return {
+        type: actionTypes.FAIL_CREATE_TODO_TASK
+    };
+};
+
+export const createTodoTask = (taskTitle, activeProjectId, accessToken) => {
+    return dispatch => {
+        dispatch(startCreateTodoTask());
+
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+        
+        let data = { title: taskTitle };
+        let config = {
+            method: 'post',
+            url: `/project/${+activeProjectId}/task/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        axios(config)
+            .then(response => {
+                console.log(response.data);
+                const createdTask = response.data;
+                const task = createdTask;
+                dispatch(successCreateTodoTask(task));
+            })
+            .catch(error => {
+                dispatch(failCreateTodoTask(error));
+                console.log(error);
+            });
+    };
+};
+
+// DRAG TASK IN SAME COLUMN
+
+const successDragTaskSameColumn = (newColumn) => {
+    return {
+        type: actionTypes.SUCCESS_DRAG_TASK_SAME_COLUMN,
+        newColumn
+    };
+};
+
+const failDragTaskSameColumn = (sourceCol, error) => {
+    return {
+        type: actionTypes.FAIL_DRAG_TASK_SAME_COLUMN,
+        sourceCol,
+        error
+    };
+};
+
+export const dragTaskSameColumn = (taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol) => {
+    return dispatch => {
+
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let phase;
+        if(destinationCol === 'column-1') { phase = TASK_PHASE.todo ;}
+        if(destinationCol === 'column-2') { phase = TASK_PHASE.doing ;}
+        if(destinationCol === 'column-3') { phase = TASK_PHASE.done ;}
+        
+        let data = {
+            phase : phase,
+            'row_position' : +newPosition,
+        }
+        console.log(data);
+        console.log(taskId);
+        console.log(newPosition);
+        console.log(destinationCol);
+        console.log(newColumn);
+
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        dispatch(successDragTaskSameColumn(newColumn));
+        axios(config)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failDragTaskSameColumn(sourceCol, error));
+                console.log(error);
+            });
+    };
+};
+
+// DRAG TASK IN OTHER COLUMN
+
+const successDragTaskOtherColumn = (newStartColumn, newEndColumn) => {
+    return {
+        type: actionTypes.SUCCESS_DRAG_TASK_OTHER_COLUMN,
+        newStartColumn,
+        newEndColumn
+    };
+};
+
+const failDragTaskOtherColumn = (sourceStartCol, sourceEndCol, error) => {
+    return {
+        type: actionTypes.FAIL_DRAG_TASK_OTHER_COLUMN,
+        sourceStartCol,
+        sourceEndCol,
+        error
+    };
+};
+
+export const dragTaskOtherColumn = (taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol) => {
+    return dispatch => {
+
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let phase;
+        if(destinationCol === 'column-1') { phase = TASK_PHASE.todo ;}
+        if(destinationCol === 'column-2') { phase = TASK_PHASE.doing ;}
+        if(destinationCol === 'column-3') { phase = TASK_PHASE.done ;}
+        
+        let data = {
+            phase : phase,
+            'row_position' : +newPosition,
+        }
+        console.log(data);
+        console.log(taskId);
+        console.log(newPosition);
+        console.log(destinationCol);
+        console.log(newStartColumn);
+        console.log(newEndColumn);
+
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        dispatch(successDragTaskOtherColumn(newStartColumn, newEndColumn));
+        axios(config)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failDragTaskOtherColumn(sourceStartCol, sourceEndCol, error));
                 console.log(error);
             });
     };

@@ -4,8 +4,8 @@
     top: 110px;
     left: 0;
     height: calc(100vh - 60px - 70px - 40px);
-    padding: 30px 5px 10px 5px;
-    background-color: rgb(233, 233, 233);
+    padding: 30px 10px 10px 10px;
+    background-color: #ebebeb;
     /* border: 1px solid red; */
     border-radius: 0 10px 10px 0;
     overflow-y: auto;

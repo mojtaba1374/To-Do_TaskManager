@@ -8,7 +8,6 @@
 
 .SettingContainer h3 {
     margin: 0;
-    /* border-bottom: 1px solid rgb(211, 211, 211); */
     padding-bottom: 10px;
     margin-bottom: 10px;
 }
@@ -24,6 +23,7 @@
 .EmailInputContainer input {
     box-sizing: border-box;
     border: 1px solid #ccc;
+    outline: none;
     width: 80%;
     padding: 10px;
     border-radius: 0 5px 5px 0;
@@ -32,14 +32,13 @@
 
 .NameInputContainer input:hover,
 .EmailInputContainer input:hover {
-    border-color: rgb(163, 163, 163);
+    border-color: #a3a3a3;
 }
 
 .NameInputContainer input:focus,
 .EmailInputContainer input:focus {
-    border-color: green;
+    border-color: #008000;
     border-left-color: transparent;
-    outline: none;
 }
 
 .NameInputContainer button,

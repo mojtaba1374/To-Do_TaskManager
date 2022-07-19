@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Samim';
+  src: url('./fonts/Farsi-Digits/Samim-FD.eot');
+  src: url('./fonts/Farsi-Digits/Samim-FD.ttf') format('truetype');
+  src: url('./fonts/Farsi-Digits/Samim-FD.woff') format('woff');
+  src: url('./fonts/Farsi-Digits/Samim-FD.woff2') format('woff2');
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
 }
@@ -5,12 +13,18 @@
 html {
   /* height: 100%; */
   direction: rtl;
+  font-family: 'Samim' sans-serif;
 }
 
 html, body {
   margin: 0;
   padding: 0;
   height: 100vh;
+  font-family: 'samim';
+}
+div {
+  font-family: 'samim';
+  
 }
 
 input, button, textarea, select {
