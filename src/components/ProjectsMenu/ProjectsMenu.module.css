@@ -16,6 +16,10 @@
     border-bottom: 2px solid #f3f3f3;
 }
 
+.ProjectsHeader span {
+    font-weight: bolder;
+}
+
 .DeleteProjectBtn {
     padding: 5px 10px;
     margin: 10px;

@@ -14,13 +14,15 @@ import ProjectMember from '../ProjectMembers/ProjectMember/ProjectMember';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
+import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
+
 
 class ProjectsMenu extends Component {
 
     state = {
         showModal: false,
         showSetting: false,
-        projectMembers: []
+        deletingMemberMail: false
     }
 
     openAddProjectModal = () => {
@@ -64,7 +66,10 @@ class ProjectsMenu extends Component {
     }
 
     deleteMemberFromProjectHandler = userEmail => {
-        this.props.onDeleteMember(userEmail, this.props.activeProjectId, this.props.token)
+        this.setState({
+            deletingMemberMail: userEmail
+        });
+        this.props.onDeleteMember(userEmail, this.props.activeProjectId, this.props.token);
     }
 
     render() {
@@ -99,13 +104,15 @@ class ProjectsMenu extends Component {
             members= this.props.activeProjectMembers.map((member, idx) => {
                 return(
                     <ProjectMember
-                        key={member.username+ idx}
+                        key={member.username + idx}
                         userName={member.username}
                         userEmail={member.email}
                         confirmed={member.confirmed}
                         userRoleOfActiveProject={userRoleOfActiveProject}
                         memberRole={member['user_role']}
                         profileData={this.props.profileData}
+                        deletingMemberMail={this.state.deletingMemberMail}
+                        loadingDeleteMember={this.props.loadingDeleteMember}
                         clickedDeleteUserBtn={() => this.deleteMemberFromProjectHandler(member.email)} />
                 );
             });
@@ -118,9 +125,11 @@ class ProjectsMenu extends Component {
                     <ProjectSetting
                         userRoleOfActiveProject={userRoleOfActiveProject}
                         projectName={this.props.activeProject}
+                        loadingEditPrjName={this.props.loadingEditPrjName}
+                        loadingInvitation={this.props.loadingInvitation}
                         clickedEditName={this.editeProjectName}
                         clickedAddMember={this.inviteMember} />
-                    <ProjectMembers>
+                    <ProjectMembers loadingGetMembers={this.props.loadingGetMembers}>
                         {members}
                     </ProjectMembers>
                     {userRoleOfActiveProject === 'Admin' &&
@@ -162,7 +171,11 @@ const mapStateToProps = state => {
         profileData: state.dashboard.profileData,
         showProjectSetting: state.dashboard.showProjectSetting,
         token: state.auth.accessToken,
-        createProjectLoading: state.dashboard.loadingCrtPrj
+        createProjectLoading: state.dashboard.loadingCrtPrj,
+        loadingEditPrjName: state.dashboard.loadingEditPrjName,
+        loadingGetMembers: state.dashboard.loadingGetMembers,
+        loadingInvitation: state.dashboard.loadingInvitation,
+        loadingDeleteMember: state.dashboard.loadingDeleteMember
     };
 };
 

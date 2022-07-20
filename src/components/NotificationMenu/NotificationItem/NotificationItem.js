@@ -1,5 +1,7 @@
 import classes from './NotificationItem.module.css';
 
+import FormLoading from '../../Ui/Loader/FormLoading/FormLoading';
+
 const NotificationItem = props => {
 
     return (
@@ -12,6 +14,11 @@ const NotificationItem = props => {
             <button className={classes.RejectedBtn} onClick={props.clickedRejected}>
                 رد کردن
             </button>
+            {((props.loadingConfirmedInvite || props.loadingInconfirmedInvite) && +props.invitationProjectId === +props.projectId ) &&
+                <div className={classes.Loader}>
+                    <FormLoading />
+                </div>
+            }
         </div>
     );
 };

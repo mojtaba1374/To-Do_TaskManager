@@ -66,3 +66,9 @@
 .DeleteUserBtn:hover {
     background-color: rgba(197, 174, 174, 0.425);
 }
+
+.Loading {
+    position: absolute;
+    right: 95%;
+    transform: translateY(-85%);
+}

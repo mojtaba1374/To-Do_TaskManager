@@ -13,6 +13,8 @@ import Backdrop from '../../Ui/Backdrop/Backdrop';
 import Modal from '../../Ui/Modal/Modal';
 import TaskEditor from '../Task/TaskEditor/TaskEditor';
 
+import FormLoading from '../../Ui/Loader/FormLoading/FormLoading';
+
 
 class Section extends Component {
 
@@ -41,9 +43,10 @@ class Section extends Component {
             this.props.onCreateTodoTask(taskContent, this.props.activeProjectId, this.props.accessToken);
 
             // bayad yek loader dashte basham va vaghti ke success bod action bala adding task ra bebandad.
-            this.setState({
-                addingTask: false
-            });
+            // !this.props.loadingCreateTask &&
+                // this.setState({
+                //     addingTask: false
+                // });
         }
     }
 
@@ -74,6 +77,7 @@ class Section extends Component {
         if(this.props.sectionName === 'برای انجام' && this.state.addingTask) {
             addingTask = (
                 <TaskCreator 
+                    loadingCreateTask={this.props.loadingCreateTask}
                     clickedCancelBtn={this.cancelCreationTaskHandler}
                     clickedSaveBtn={this.saveTaskHandler} />
             );
@@ -117,7 +121,7 @@ class Section extends Component {
             })
         );
 
-        const modal = (
+        const taskEditor = (
             <>
                 <Backdrop showModal={this.state.taskEditor} clickedBackdrop={this.closeTaskEditor} />
                 <Modal showModal={this.state.taskEditor}>
@@ -132,7 +136,7 @@ class Section extends Component {
         
         return (
             <div className={classes.Section}>
-                {modal}
+                {taskEditor}
                 <div className={classes.SectionHeader}>
                     <div>
                         {this.props.sectionName}
@@ -159,7 +163,8 @@ const mapStateToProps = state => {
     return {
         activeProjectId: state.dashboard.activeProjectId,
         activeProject: state.dashboard.activeProject,
-        accessToken: state.auth.accessToken
+        accessToken: state.auth.accessToken,
+        loadingCreateTask: state.dashboard.loadingCreateTask
     };
 };
 

@@ -154,12 +154,8 @@ const mapDispatchToProps = dispatch => {
     return {
         onDragTaskSameColumn: (taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol) =>
             dispatch(actions.dragTaskSameColumn(taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol)),
-        // onDragTaskInSameColumn:
-        //     newColumn => dispatch({type: actionTypes.DRAG_TASK_IN_SAME_COLUMN, newColumn}),
         onDragTaskOtherColumn: (taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol) =>
             dispatch(actions.dragTaskOtherColumn(taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol)),
-        // onDragTaskInOtherColumn: 
-        //     (newStartCol, newEndCol) => dispatch({type: actionTypes.DRAG_TASK_IN_OTHER_COLUMN, newStartCol, newEndCol})
     };
 };
 

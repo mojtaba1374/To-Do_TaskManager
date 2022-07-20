@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classes from './ProjectSetting.module.css';
+import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
 
 const EMAILREgex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -50,6 +51,11 @@ class ProjectSetting extends Component {
                             تایید
                         </button>
                     </div>
+                    {this.props.loadingEditPrjName &&
+                        <div className={classes.Loading}>
+                            <FormLoading />
+                        </div>
+                    }
                 </div>
                 <h4 style={{textAlign: 'right'}}>کاربران تیم را حذف یا اضافه کنید</h4>
                 
@@ -61,6 +67,11 @@ class ProjectSetting extends Component {
                         onClick={() => this.props.clickedAddMember(this.state.email)}>
                         اضافه
                     </button> 
+                    {this.props.loadingInvitation &&
+                        <div className={classes.LoadingInvitation}>
+                            <FormLoading />
+                        </div>
+                    }
                 </div>
             </div> :
             <h3 style={{textAlign: 'right', paddingRight: '40px'}}>اعضای تیم پروژه</h3>

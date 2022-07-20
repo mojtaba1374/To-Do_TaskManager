@@ -18,7 +18,8 @@ import PageLoading from '../Ui/Loader/PageLoading/PageLoading';
 class ProjectsDashboard extends Component {
 
     state = {
-        showProfile: false
+        showProfile: false,
+        invitationProjectId: ''
     }
 
     componentDidMount() {
@@ -35,10 +36,16 @@ class ProjectsDashboard extends Component {
     }
 
     confirmedInviteHandler = (projectName, projectId) => {
+        this.setState({
+            invitationProjectId: projectId
+        });
         this.props.onConfirmedInvite(projectName, projectId, this.props.access);
     }
     
     rejectedInviteHandler = (projectId) => {
+        this.setState({
+            invitationProjectId: projectId
+        });
         this.props.onInconfirmedInvite(projectId, this.props.access);
     }
 
@@ -63,6 +70,10 @@ class ProjectsDashboard extends Component {
                     key={project[projectId].inviter.username + idx}
                     inviterUsername={project[projectId].inviter.username} 
                     projectName={project[projectId].projectName}
+                    projectId={projectId}
+                    invitationProjectId={this.state.invitationProjectId}
+                    loadingConfirmedInvite={this.props.loadingConfirmedInvite}
+                    loadingInconfirmedInvite={this.props.loadingInconfirmedInvite}
                     clickedConfirmed={() => this.confirmedInviteHandler(project[projectId].projectName, projectId)}
                     clickedRejected={() => this.rejectedInviteHandler(projectId)} />
             );
@@ -112,7 +123,9 @@ const mapStateToProps = state => {
         profileData: state.dashboard.profileData,
         access: state.auth.accessToken,
         loadingProfile: state.dashboard.loadingProfile,
-        loadingProjects: state.dashboard.loadingProjects
+        loadingProjects: state.dashboard.loadingProjects,
+        loadingConfirmedInvite: state.dashboard.loadingConfirmedInvite,
+        loadingInconfirmedInvite: state.dashboard.loadingInconfirmedInvite
     };
 };
 

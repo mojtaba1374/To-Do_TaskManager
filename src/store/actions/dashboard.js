@@ -277,12 +277,12 @@ const successDeleteProject = projectId => {
     };
 };
 
-const failDeleteProject = () => {
+const failDeleteProject = error => {
     return {
-        type: actionTypes.FAIL_DELETE_PROJECT
+        type: actionTypes.FAIL_DELETE_PROJECT,
+        error
     };
 };
-
 
 export const deleteProject = (activeProjectId, token) => {
     return dispatch => {
@@ -307,7 +307,7 @@ export const deleteProject = (activeProjectId, token) => {
                 console.log(response);
             })
             .catch(error => {
-                dispatch(failDeleteProject());
+                dispatch(failDeleteProject(error));
                 console.log(error)
             });
     }
@@ -328,9 +328,10 @@ const successEditProjectName = (projectId, projectName) => {
         projectName
     };
 };
-const failEditProjectName = () => {
+const failEditProjectName = error => {
     return {
-        type: actionTypes.FAIL_EDIT_PROJECT_NAME
+        type: actionTypes.FAIL_EDIT_PROJECT_NAME,
+        error
     };
 };
 
@@ -361,7 +362,7 @@ export const editProjectName = (projectName, activeProjectId, token) => {
                 console.log(response.data);
             })
             .catch(error => {
-                dispatch(failEditProjectName());
+                dispatch(failEditProjectName(error));
                 console.log(error)
             });
     };
@@ -426,9 +427,10 @@ const startUserLeaveProject = () => {
     };
 };
 
-const failUserLeaveProject = () => {
+const failUserLeaveProject = error => {
     return {
-        type: actionTypes.FAIL_USER_LEAVE_PROJECT
+        type: actionTypes.FAIL_USER_LEAVE_PROJECT,
+        error
     };
 };
 
@@ -451,14 +453,12 @@ export const userLeaveProject = (projectId, token) => {
         
         axios(config)
             .then(response => {
-                // dispatch(successUserLeaveProject(projectId));
                 dispatch(successDeleteProject(projectId));
                 dispatch(closeSettingProjectModal());
-                // this.setState({showSetting: false});
                 console.log(response);
             })
             .catch(error => {
-                dispatch(failUserLeaveProject());
+                dispatch(failUserLeaveProject(error));
                 console.log(error)
             });
     };
@@ -480,9 +480,10 @@ const successInviteMember = projecMember => {
     };
 };
 
-const failInviteMember = () => {
+const failInviteMember = error => {
     return {
-        type: actionTypes.FAIL_INVITE_MEMBER
+        type: actionTypes.FAIL_INVITE_MEMBER,
+        error
     };
 };
 
@@ -521,7 +522,7 @@ export const inviteMember = (userMail, projectId, token) => {
                 console.log(response.data);
             })
             .catch(error => {
-                dispatch(failInviteMember());
+                dispatch(failInviteMember(error));
                 console.log(error);
             })
     };
@@ -542,15 +543,16 @@ const successDeleteMember = userEmail => {
     };
 };
 
-const failDeleteMember = () => {
+const failDeleteMember = error => {
     return {
-        type: actionTypes.FAIL_DELETE_MEMBER     
+        type: actionTypes.FAIL_DELETE_MEMBER,
+        error  
     };
 };
 
 export const deleteMember = (userEmail, projectId, token) => {
     return dispatch => {
-        dispatch(startDeleteMember);
+        dispatch(startDeleteMember());
         let accesToken = token;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
@@ -575,7 +577,7 @@ export const deleteMember = (userEmail, projectId, token) => {
                 console.log(response.data);
             })
             .catch(error => {
-                dispatch(failDeleteMember());
+                dispatch(failDeleteMember(error));
                 console.log(error);
             });
     };
@@ -611,9 +613,10 @@ const successConfirmedInvite = (projectName, projectId) => {
     };
 };
 
-const failConfirmedInvite = () => {
+const failConfirmedInvite = error => {
     return {
-        type: actionTypes.FAIL_CONFIRMED_INVITE
+        type: actionTypes.FAIL_CONFIRMED_INVITE,
+        error
     };
 };
 
@@ -646,7 +649,7 @@ export const confirmedInvite = (projectName, projectId, token) => {
                 console.log(response.data);
             })
             .catch(error => {
-                dispatch(failConfirmedInvite());
+                dispatch(failConfirmedInvite(error));
                 console.log(error);
             });
     };
@@ -667,9 +670,10 @@ const successInconfirmedInvite = projectId => {
     };
 };
 
-const failInconfirmedInvite = () => {
+const failInconfirmedInvite = error => {
     return {
-        type: actionTypes.FAIL_INCONFIRMED_INVITE
+        type: actionTypes.FAIL_INCONFIRMED_INVITE,
+        error
     };
 };
 
@@ -702,7 +706,7 @@ export const inconfirmedInvite = (projectId, token) => {
                 console.log(response.data);
             })
             .catch(error => {
-                dispatch(failInconfirmedInvite());
+                dispatch(failInconfirmedInvite(error));
                 console.log(error);
             });
     };
@@ -723,9 +727,10 @@ const successCreateTodoTask = task => {
     };
 };
 
-const failCreateTodoTask = () => {
+const failCreateTodoTask = (error) => {
     return {
-        type: actionTypes.FAIL_CREATE_TODO_TASK
+        type: actionTypes.FAIL_CREATE_TODO_TASK,
+        error
     };
 };
 
@@ -764,6 +769,12 @@ export const createTodoTask = (taskTitle, activeProjectId, accessToken) => {
 
 // DRAG TASK IN SAME COLUMN
 
+const startDragTaskSameColumn = () => {
+    return {
+        type: actionTypes.START_DRAG_TASK_SAME_COLUMN
+    };
+};
+
 const successDragTaskSameColumn = (newColumn) => {
     return {
         type: actionTypes.SUCCESS_DRAG_TASK_SAME_COLUMN,
@@ -782,6 +793,7 @@ const failDragTaskSameColumn = (sourceCol, error) => {
 export const dragTaskSameColumn = (taskId, newPosition, destinationCol, newColumn, accessToken, sourceCol) => {
     return dispatch => {
 
+        dispatch(startDragTaskSameColumn());
         let accesToken = accessToken;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
@@ -825,6 +837,12 @@ export const dragTaskSameColumn = (taskId, newPosition, destinationCol, newColum
 
 // DRAG TASK IN OTHER COLUMN
 
+const startDragTaskOtherColumn = () => {
+    return {
+        type: actionTypes.START_DRAG_TASK_OTHER_COLUMN
+    };
+};
+
 const successDragTaskOtherColumn = (newStartColumn, newEndColumn) => {
     return {
         type: actionTypes.SUCCESS_DRAG_TASK_OTHER_COLUMN,
@@ -845,6 +863,7 @@ const failDragTaskOtherColumn = (sourceStartCol, sourceEndCol, error) => {
 export const dragTaskOtherColumn = (taskId, newPosition, destinationCol, newStartColumn, newEndColumn, accessToken, sourceStartCol, sourceEndCol) => {
     return dispatch => {
 
+        dispatch(startDragTaskOtherColumn());
         let accesToken = accessToken;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');

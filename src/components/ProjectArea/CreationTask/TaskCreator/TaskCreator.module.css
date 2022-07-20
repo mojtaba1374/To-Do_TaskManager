@@ -1,6 +1,7 @@
 .TaskCreator {
     width: 95%;
     margin: auto;
+    position: relative;
     z-index: 200;
 }
 
@@ -25,4 +26,10 @@
 
 .TaskCreator input {
     height: 60px;
+}
+
+.Loader {
+    position: absolute;
+    bottom: 35px;
+    right: 50%;
 }

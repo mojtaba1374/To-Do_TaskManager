@@ -1,4 +1,5 @@
 import classes from './ProjectMember.module.css';
+import FormLoading from '../../Ui/Loader/FormLoading/FormLoading';
 
 const ProjectMember = props => {
 
@@ -30,6 +31,11 @@ const ProjectMember = props => {
             </h4>
             <p className={paragraphClasses.join(' ')}>
                 {memberRole}
+                {(props.loadingDeleteMember && props.deletingMemberMail === props.userEmail) &&     // moshkel ine ke bara tamae list loading miad
+                    <div className={classes.Loading}>
+                        <FormLoading /> 
+                    </div>
+                }
             </p>
             {(props.memberRole === 'User' && props.userRoleOfActiveProject === 'Admin') && 
                 <button className={classes.DeleteUserBtn} onClick={props.clickedDeleteUserBtn}>

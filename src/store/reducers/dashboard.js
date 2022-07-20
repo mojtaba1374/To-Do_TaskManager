@@ -15,6 +15,21 @@ const initialState = {
     errorProjects: null,
     loadingCrtPrj: false,
     errorCrtPrj: null,
+    loadingDeletePrj: false,
+    errorDeletePrj: null,
+    loadingGetMembers: false,
+    errorGetMembers: null,
+    errorUserLeave: null,
+    loadingInvitation: false,
+    errorInvitation: null,
+    loadingCreateTask: false,
+    errorCreateTask: null,
+    errorDragSameCol: null,
+    errorDragOtherCol: null,
+    loadingConfirmedInvite: false,
+    errorConfirmedInvite: null,
+    loadingInconfirmedInvite: false,
+    errorInconfirmedInvite: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -37,15 +52,15 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_GET_USER_PROFILE_DATA:
             updatedState = {
                 ...state,
-                error: action.error,
-                loadingProfile: false
+                loadingProfile: false,
+                errorProfile: action.error
             };
             break;
         case actionTypes.START_INITIALIZE_PROJECTS:
             updatedState = {
                 ...state,
-                errorProjects: null,
-                loadingProjects: true
+                loadingProjects: true,
+                errorProjects: null
             };
             break;
         case actionTypes.SUCCESS_INITIALIZE_PROJECTS:
@@ -58,15 +73,15 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_INITIALIZE_PROJECTS:
             updatedState = {
                 ...state,
-                error: action.error,
-                loadingProjects: false
+                loadingProjects: false,
+                error: action.error
             }
             break;
         case actionTypes.START_ADD_NEW_PROJECT:
             updatedState = {
                 ...state,
-                errorCrtPrj: null,
-                loadingCrtPrj: true
+                loadingCrtPrj: true,
+                errorCrtPrj: null
             };
             break;
         case actionTypes.SUCCESS_ADD_NEW_PROJECT:
@@ -95,7 +110,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.START_DELETE_PROJECT:
             updatedState = {
                 ...state,
-                loading: true
+                loadingDeletePrj: true,
+                errorDeletePrj: null
             };
             break;
         case actionTypes.SUCCESS_DELETE_PROJECT:
@@ -109,7 +125,7 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
-                loading: false,
+                loadingDeletePrj: false,
                 showProjectSetting: false,
                 projects: filteringProjects,
                 activeProject: '',
@@ -119,7 +135,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_DELETE_PROJECT:
             updatedState = {
                 ...state,
-                loading: false
+                loadingDeletePrj: false,
+                errorDeletePrj: action.error
             }
             break;
         case actionTypes.SHOW_SETTING_PROJECT_MODAL:
@@ -137,7 +154,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.START_EDIT_PROJECT_NAME:
             updatedState = {
                 ...state,
-                loading: true
+                loadingEditPrjName: true,
+                errorEditPrjName: null
             };
             break;
         case actionTypes.SUCCESS_EDIT_PROJECT_NAME:
@@ -151,6 +169,7 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
+                loadingEditPrjName: false,
                 projects: copyFromProjects,
                 activeProjectId: action.projectId,
                 activeProject: action.projectName
@@ -159,44 +178,48 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_EDIT_PROJECT_NAME:
             updatedState = {
                 ...state,
-                loading: false
+                loadingEditPrjName: false,
+                errorEditPrjName: action.error
             };
             break;
         case actionTypes.START_INITIALIZE_ACTIVEPROJECT_MEMBERS:
             updatedState = {
                 ...state,
-                loading: true
+                errorGetMembers: null,
+                loadingGetMembers: true
             };
             break;
         case actionTypes.SUCCESS_INITIALIZE_ACTIVEPROJECT_MEMBERS:
             updatedState = {
                 ...state,
-                loading: false,
+                loadingGetMembers: false,
                 activeProjectMembers: action.projectMembers
             };
             break;
         case actionTypes.FAIL_INITIALIZE_ACTIVEPROJECT_MEMBERS:
             updatedState = {
                 ...state,
-                loading: false
+                loadingGetMembers: false,
+                errorGetMembers: action.error
             };
             break;
         case actionTypes.START_USER_LEAVE_PROJECT:
             updatedState = {
                 ...state,
-                loading: true
+                errorUserLeave:null
             };
             break;
         case actionTypes.FAIL_USER_LEAVE_PROJECT:
             updatedState = {
                 ...state,
-                loading: false
+                errorUserLeave: action.error
             };
             break;
         case actionTypes.START_INVITE_MEMBER:
             updatedState = {
                 ...state,
-                loading: true
+                errorInvitation: null,
+                loadingInvitation: true
             };
             break;
         case actionTypes.SUCCESS_INVITE_MEMBER:
@@ -204,20 +227,22 @@ const reducer = (state = initialState, action) => {
             projectMembers.push(action.projecMember)
             updatedState = {
                 ...state,
-                loading: false,
+                loadingInvitation: false,
                 activeProjectMembers: projectMembers
             };
             break;
         case actionTypes.FAIL_INVITE_MEMBER:
             updatedState = {
                 ...state,
-                loading: false
+                loadingInvitation: false,
+                errorInvitation: action.error
             };
             break;
         case actionTypes.START_DELETE_MEMBER:
             updatedState = {
                 ...state,
-                loading: true
+                errorDeleteMember: null,
+                loadingDeleteMember: true
             };
             break;
         case actionTypes.SUCCESS_DELETE_MEMBER:
@@ -230,14 +255,15 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
-                loading: false,
+                loadingDeleteMember: false,
                 activeProjectMembers: newProjectMembers
             };
             break;
         case actionTypes.FAIL_DELETE_MEMBER:
             updatedState = {
                 ...state,
-                loading: false
+                errorDeleteMember: action.error,
+                loadingDeleteMember: false
             };
             break;
         case actionTypes.OPEN_NOTIFICATION_STATUS:
@@ -255,7 +281,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.START_CONFIRMED_INVITE:
             updatedState = {
                 ...state,
-                loading: true
+                errorConfirmedInvite: null,
+                loadingConfirmedInvite: true
             };
             break;
         case actionTypes.SUCCESS_CONFIRMED_INVITE:
@@ -268,7 +295,7 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
-                loading: false,
+                loadingConfirmedInvite: false,
                 showNotification: false,
                 activeProject: action.projectName,
                 activeProjectId: action.projectId,
@@ -278,13 +305,15 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_CONFIRMED_INVITE:
             updatedState = {
                 ...state,
-                loading: false
+                loadingConfirmedInvite: false,
+                errorConfirmedInvite: action.error
             };
             break;
         case actionTypes.START_INCONFIRMED_INVITE:
             updatedState = {
                 ...state,
-                loading: true
+                errorInconfirmedInvite: null,
+                loadingInconfirmedInvite: true
             };
             break;
         case actionTypes.SUCCESS_INCONFIRMED_INVITE:
@@ -298,20 +327,22 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
-                loading: false,
+                loadingInconfirmedInvite: false,
                 projects: filteredProjects
             };
             break;
         case actionTypes.FAIL_INCONFIRMED_INVITE:
             updatedState = {
                 ...state,
-                loading: false
+                loadingInconfirmedInvite: false,
+                errorInconfirmedInvite: action.error
             };
             break;
         case actionTypes.START_CREATE_TODO_TASK:
             updatedState = {
                 ...state,
-                loading: true
+                loadingCreateTask: true,
+                errorCreateTask: null
             };
             break;
         case actionTypes.SUCCESS_CREATE_TODO_TASK:
@@ -326,14 +357,21 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
-                loading: false,
+                loadingCreateTask: false,
                 projects: copiiedProjects
             };
             break;
         case actionTypes.FAIL_CREATE_TODO_TASK:
             updatedState = {
                 ...state,
-                loading: false
+                loadingCreateTask: false,
+                errorCreateTask: action.error
+            };
+            break;
+        case actionTypes.START_DRAG_TASK_SAME_COLUMN:
+            updatedState = {
+                ...state,
+                errorDragSameCol: null
             };
             break;
         case actionTypes.SUCCESS_DRAG_TASK_SAME_COLUMN:
@@ -371,7 +409,14 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
+                errorDragSameCol: action.error,
                 projects: updatingProjects
+            };
+            break;
+        case actionTypes.START_DRAG_TASK_OTHER_COLUMN:
+            updatedState = {
+                ...state,
+                errorDragOtherCol: null
             };
             break;
         case actionTypes.SUCCESS_DRAG_TASK_OTHER_COLUMN:
@@ -411,6 +456,7 @@ const reducer = (state = initialState, action) => {
             });
             updatedState = {
                 ...state,
+                errorDragOtherCol: action.error,
                 projects: copyyProjects
             };
             break;

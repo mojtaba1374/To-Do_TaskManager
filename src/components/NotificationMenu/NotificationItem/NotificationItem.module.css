@@ -2,6 +2,7 @@
     width: 99%;
     /* border: 1px solid red; */
     /* background-color: #fff; */
+    position: relative;
     border-radius: 5px;
     box-shadow: 0 0 2px #808080;
     margin: 10px auto;
@@ -41,4 +42,10 @@
 
 .NotificationItem .RejectedBtn:hover {
     background-color: #da422f;
+}
+
+.Loader {
+    position: absolute;
+    right: 80%;
+    bottom: 20px;
 }
