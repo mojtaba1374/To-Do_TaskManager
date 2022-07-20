@@ -1,6 +1,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
+    profileData: null,
     activeProject: '',
     activeProjectId: null,
     projects: [],
@@ -8,52 +9,70 @@ const initialState = {
     loading: false,
     showProjectSetting: false,
     showNotification: false,
-    profileData: null
+    loadingProfile: false,
+    errorProfile: null,
+    loadingProjects: false,
+    errorProjects: null,
+    loadingCrtPrj: false,
+    errorCrtPrj: null,
 };
 
 const reducer = (state = initialState, action) => {
     let updatedState;
     switch(action.type) {
+        case actionTypes.START_GET_USER_PROFILE_DATA:
+            updatedState = {
+                ...state,
+                errorProfile: null,
+                loadingProfile: true
+            };
+            break;
         case actionTypes.SUCCESS_GET_USER_PROFILE_DATA:
             updatedState = {
                 ...state,
+                loadingProfile: false,
                 profileData: action.profileData
             };
             break;
         case actionTypes.FAIL_GET_USER_PROFILE_DATA:
             updatedState = {
-                ...state
+                ...state,
+                error: action.error,
+                loadingProfile: false
             };
             break;
         case actionTypes.START_INITIALIZE_PROJECTS:
             updatedState = {
                 ...state,
-                loading: true
+                errorProjects: null,
+                loadingProjects: true
             };
             break;
         case actionTypes.SUCCESS_INITIALIZE_PROJECTS:
             updatedState = {
                 ...state,
-                loading: false,
+                loadingProjects: false,
                 projects: action.projects
             };
             break;
         case actionTypes.FAIL_INITIALIZE_PROJECTS:
             updatedState = {
                 ...state,
-                loading: false
+                error: action.error,
+                loadingProjects: false
             }
             break;
         case actionTypes.START_ADD_NEW_PROJECT:
             updatedState = {
                 ...state,
-                loading: true
+                errorCrtPrj: null,
+                loadingCrtPrj: true
             };
             break;
         case actionTypes.SUCCESS_ADD_NEW_PROJECT:
             updatedState = {
                 ...state,
-                loading: false,
+                loadingCrtPrj: false,
                 projects: state.projects.concat(action.project),
                 activeProject: action.projectName,
                 activeProjectId: action.projectId
@@ -62,7 +81,8 @@ const reducer = (state = initialState, action) => {
         case actionTypes.FAIL_ADD_NEW_PROJECT:
             updatedState = {
                 ...state,
-                loading: false
+                loadingCrtPrj: false,
+                errorCrtPrj: action.error
             };
             break;
         case actionTypes.CHANGE_ACTIVE_PROJECT:

@@ -9,6 +9,12 @@ const TASK_PHASE = {
 
 // GET USER PROFILE DATA
 
+const startGetUserProfileData = () => {
+    return {
+        type: actionTypes.START_GET_USER_PROFILE_DATA
+    };
+};
+
 const successGetUserProfileData = (profileData) => {
     return {
         type: actionTypes.SUCCESS_GET_USER_PROFILE_DATA,
@@ -16,14 +22,17 @@ const successGetUserProfileData = (profileData) => {
     };
 };
 
-const failGetUserProfileData = () => {
+const failGetUserProfileData = error => {
     return {
-        type: actionTypes.FAIL_GET_USER_PROFILE_DATA
+        type: actionTypes.FAIL_GET_USER_PROFILE_DATA,
+        error
     };
 };
 
 export const getUserProfileData = token => {
     return dispatch => {
+
+        dispatch(startGetUserProfileData());
         let accesToken = token;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
@@ -44,7 +53,7 @@ export const getUserProfileData = token => {
                 // console.log(response.data);
             })
             .catch(error => {
-                dispatch(failGetUserProfileData());
+                dispatch(failGetUserProfileData(error));
                 console.log(error);
             });
     };

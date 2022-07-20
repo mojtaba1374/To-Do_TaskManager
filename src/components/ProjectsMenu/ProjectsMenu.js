@@ -32,8 +32,10 @@ class ProjectsMenu extends Component {
     }
 
     addProjectHandler = (projectName) => {
-        this.setState({ showModal: false });
         this.props.onAddNewProject(projectName, this.props.token);
+        if(!this.props.createProjectLoading) {
+            this.setState({ showModal: false });
+        }
     }
 
     editeProjectName = (projectName) => {
@@ -143,7 +145,7 @@ class ProjectsMenu extends Component {
                     <span>پروژه ها</span>
                     <AddButton clickeAddBtn={this.openAddProjectModal} />
                 </div>
-                <Projects>
+                <Projects creatingProject={this.props.createProjectLoading}>
                     {projects}
                 </Projects>
             </div>
@@ -159,7 +161,8 @@ const mapStateToProps = state => {
         activeProjectMembers: state.dashboard.activeProjectMembers,
         profileData: state.dashboard.profileData,
         showProjectSetting: state.dashboard.showProjectSetting,
-        token: state.auth.accessToken
+        token: state.auth.accessToken,
+        createProjectLoading: state.dashboard.loadingCrtPrj
     };
 };
 

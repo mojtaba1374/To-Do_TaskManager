@@ -5,12 +5,14 @@ import Header from '../Header/Header';
 import ProjectsMenu from '../ProjectsMenu/ProjectsMenu';
 import ProjectArea from '../ProjectArea/ProjectArea';
 
-import { connect } from 'react-redux';
 import Notification from '../Ui/Notification/Notification';
 import NotificationMenu from '../NotificationMenu/NotificationMenu';
 import NotificationItem from '../NotificationMenu/NotificationItem/NotificationItem';
 
-import * as actions from '../../store/actions/index'
+import { connect } from 'react-redux';
+import * as actions from '../../store/actions/index';
+
+import PageLoading from '../Ui/Loader/PageLoading/PageLoading';
 
 
 class ProjectsDashboard extends Component {
@@ -68,27 +70,35 @@ class ProjectsDashboard extends Component {
 
         return(
             <>
-                <Header 
-                    showProfile={this.state.showProfile}
-                    username={this.props.profileData && this.props.profileData.username}
-                    email={this.props.profileData && this.props.profileData.email}
-                    clickedProfile={this.toggleUserProfile}>
-                </Header>
-                <div className={classes.ProjectsDashboard}>
-                    {this.props.showNotification && 
-                        <NotificationMenu clickedCloseNotification={this.closeNotificationHandler}>
-                            {counter === 0 ?
-                                <p className={classes.ShowEmptyNotification}>پیغامی برای هم گروهی شدن ندارید</p> :
-                                inconfirmedProjects
+                {(this.props.loadingProfile && this.props.loadingProjects) ?
+                    <div className={classes.PageLoading}>
+                        <PageLoading /> 
+                    </div>
+                    :
+                    <>
+                        <Header 
+                            showProfile={this.state.showProfile}
+                            username={this.props.profileData && this.props.profileData.username}
+                            email={this.props.profileData && this.props.profileData.email}
+                            clickedProfile={this.toggleUserProfile}>
+                        </Header>
+                        <div className={classes.ProjectsDashboard}>
+                            {this.props.showNotification && 
+                                <NotificationMenu clickedCloseNotification={this.closeNotificationHandler}>
+                                    {counter === 0 ?
+                                        <p className={classes.ShowEmptyNotification}>پیغامی برای هم گروهی شدن ندارید</p> :
+                                        inconfirmedProjects
+                                    }
+                                </NotificationMenu>
                             }
-                        </NotificationMenu>
-                    }
-                    <ProjectsMenu />
-                    <ProjectArea />
-                    <Notification
-                        clickedNotification={this.showNotificationHandler}
-                        count={counter} />
-                </div>
+                            <ProjectsMenu />
+                            <ProjectArea />
+                            <Notification
+                                clickedNotification={this.showNotificationHandler}
+                                count={counter} />
+                        </div>
+                    </>
+                }
             </>
         )
     }
@@ -100,7 +110,9 @@ const mapStateToProps = state => {
         notifCounter: state.dashboard.notifCounter,
         showNotification: state.dashboard.showNotification,
         profileData: state.dashboard.profileData,
-        access: state.auth.accessToken
+        access: state.auth.accessToken,
+        loadingProfile: state.dashboard.loadingProfile,
+        loadingProjects: state.dashboard.loadingProjects
     };
 };
 

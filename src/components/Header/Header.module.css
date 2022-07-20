@@ -10,15 +10,15 @@
     position: absolute;
     left: 25px;
     height: 30px;
-    color: #5a5a5a;
+    color: #757575;
     top: 50%;
     cursor: pointer;
     transform: translateY(-50%);
-    transition: all 0.1s ease-in-out;
+    transition: all 0.2s ease-in-out;
 }
 
 .ProfileIcon:hover {
-    color: #333333;
+    color: #181818;
 }
 
 .ProfileContainer {
@@ -30,8 +30,8 @@
     min-width: 200px;
     padding: 4px;
     border-radius: 4px 15px 4px 15px;
-    background-color: rgb(247, 247, 247);
-    box-shadow: 0 0 5px gray;
+    background-color: #fff;
+    box-shadow: 0 0 5px #636363;
     z-index: 1000;
 }
 
@@ -59,6 +59,6 @@
 }
 
 .Logout:hover {
-    color: rgb(255, 8, 8);
+    color: rgb(255, 0, 0);
     transform: perspective(10deg);
 }

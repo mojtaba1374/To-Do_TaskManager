@@ -5,8 +5,7 @@
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid rgba(128, 128, 128, 0.438);
-    border-radius: 10px 10px 0 0;
-    padding: 5px 0;
+    padding: 5px;
     text-align: right;
     margin: auto;
 }
@@ -19,21 +18,27 @@
     margin: 0;
 }
 
+.ProjectMember p {
+    position: relative;
+    bottom: 4px;
+    margin: 0;
+}
+
 .RoleParagraph {
     margin: 0;
     font-size: 12px;
 }
 
 .Admin {
-    color: green;
+    color: #23bb3c;
 }
 
 .UserPending {
-    color: red;
+    color: #ff0000;
 }
 
 .UserConfirmed {
-    color: green;
+    color: #23bb3c;
 }
 
 .DeleteUserBtn {
@@ -50,8 +55,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    display: none;
     transition: all 0.2s ease-in;
+    display: none;
 }
 
 .ProjectMember:hover .DeleteUserBtn {

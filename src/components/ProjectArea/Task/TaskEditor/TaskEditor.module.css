@@ -69,6 +69,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 2px;
+    font-size: 14px;
     width: 140px;
     margin-left: auto;
     color: rgb(188, 85, 197);
@@ -89,7 +90,7 @@
 .Canceled {
     color: red;
     width: 50px;
-    border: 1px solid rgba(128, 128, 128, 0.4);
+    border: 1px solid #80808066;
     border-radius: 5px;
     padding: 0 5px;
     cursor: pointer;
@@ -105,10 +106,11 @@
 .Confirmed {
     width: 50px;
     color: green;
-    border: 1px solid gray;
+    border: 1px solid #80808066;
     border-radius: 5px;
     padding: 0 5px;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
     margin: 2px;
 }
 
@@ -119,11 +121,6 @@
 
 .Description .ToggleDescriptBtn:hover {
     color: rgb(216, 50, 231);
-}
-
-
-.AutoHeight {
-    width: 100%;
 }
 
 textarea {
@@ -163,11 +160,9 @@ textarea:focus {
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 0 3px #0f70c0;
+    box-shadow: 0 0 5px rgb(97, 97, 97);
     width: 34px;
-    height: 34px;
-    padding: 5px;
-    border-radius: 50%;
+    height: 20px;
 }
 
 .EditPercentageContainer {
@@ -193,12 +188,6 @@ textarea:focus {
     padding: 0;
     border: 1px solid rgba(220, 220, 220);
     outline: none;
-}
-
-.progressPercentage label {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
 }
 
 .TaskDate {

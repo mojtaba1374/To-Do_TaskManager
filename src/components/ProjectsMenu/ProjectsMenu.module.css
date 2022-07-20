@@ -2,6 +2,7 @@
     width: 250px;
     height: calc(100vh - 50px);
     background-color: #fafafa;
+    border-radius: 10px 0 0 0;
     padding: 10px 15px 10px 2px;
     display: flex;
     flex-direction: column;
@@ -12,7 +13,7 @@
     justify-content: space-between;
     padding-bottom: 10px;
     padding-left: 10px;
-    border-bottom: 2px solid rgb(243, 243, 243);
+    border-bottom: 2px solid #f3f3f3;
 }
 
 .DeleteProjectBtn {
@@ -29,7 +30,6 @@
 
 .DeleteProjectBtn:hover {
     background-color: #940b06;
-    transform: rotate(360deg);
 }
 
 /* .Projects {
