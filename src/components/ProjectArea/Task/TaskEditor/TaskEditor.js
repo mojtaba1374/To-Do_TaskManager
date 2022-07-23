@@ -5,6 +5,11 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { TbFileDescription } from 'react-icons/tb';
 import { FaRegCalendarAlt } from 'react-icons/fa';
 
+import { connect } from 'react-redux';
+import * as actions from '../../../../store/actions/index';
+import FormLoading from '../../../Ui/Loader/FormLoading/FormLoading';
+import DateComponent from './DatePicker/DateComponent';
+
 
 class TaskEditor extends Component {
 
@@ -12,37 +17,14 @@ class TaskEditor extends Component {
         super(props);
         this.state = {
             title: this.props.task.title,
-            description: this.props.task.description,
-            startData: '',
-            dueDate: '',
-            progressPercentage: this.props.task.percentage,
-            openDescription: false,
             openEditTitle: false,
-            openPercentage: false
-        };
-    }
-
-    openDescription = () => {
-        this.setState({openDescription: true});
-    }
-    
-    closeDescription = () => {
-        this.setState({
-            openDescription: false
-        });
-    }
-
-    cancelChangeDescription = () => {
-        this.setState({
+            description: this.props.task.description,
             openDescription: false,
-            description: this.props.task.description
-        })
-    }
-
-    saveDescription = () => {
-        this.setState({
-            
-        });
+            progressPercentage: this.props.task.percentage,
+            openPercentage: false,
+            startData: '',
+            dueDate: ''
+        };
     }
 
     onInputHandler = event => {
@@ -54,8 +36,47 @@ class TaskEditor extends Component {
         this.setState({title: event.target.value});
     }
 
+    openEditTitleHandler = () => {
+        this.setState({openEditTitle: true});
+    }
+
+    closeEditTitleHandler = () => {
+        this.setState({
+            openEditTitle: false,
+            title: this.props.task.title
+        });
+    }
+
+    changeTaskTitle = () => {
+        this.props.onChangeTaskTitle(
+            this.props.task.id,
+            this.state.title,
+            this.props.accessToken
+        );
+        this.setState({openEditTitle: false});
+    }
+
+    openDescription = () => {
+        this.props.onOpenDescriptionTextarea();
+    }
+
     changeDescriptionHandler = event => {
         this.setState({description: event.target.value});
+    }
+
+    cancelChangeDescription = () => {
+        this.props.onCloseDescriptionTextarea();
+        this.setState({
+            description: this.props.task.description
+        });
+    }
+    
+    saveChangeDescription = () => {
+        this.props.onChangeDescription(
+            this.props.task.id,
+            this.state.description,
+            this.props.accessToken
+        );
     }
 
     openPercentageEdit = () => {
@@ -63,10 +84,31 @@ class TaskEditor extends Component {
     }
 
     editPercentageHandler = () => {
-        this.setState({openPercentage: false})
+        this.props.onChangeProgressPercentage(
+                this.props.task.id,
+                this.state.progressPercentage,
+                this.props.accessToken
+            );
+            
+        this.setState({
+            openPercentage: false
+        });
     }
 
     render() {
+        // const [createdDate, createdTime] = this.props.task['created_at'].split('T');
+        // const [year, month, day] = createdDate.split('-');
+        // const [hour, minute, second] = createdTime.split(':');
+        // console.log(year);
+        // console.log(month);
+        // console.log(day);
+        // console.log(hour);
+        // console.log(minute);
+        // console.log(second.slice(0,2));
+        // console.log(createdDate);
+        // console.log(createdTime);
+        let localCreatedTime = new Date(this.props.task['created_at']).toLocaleString('fa-IR');
+        
 
         console.log(this.props.task);
         return (
@@ -75,53 +117,80 @@ class TaskEditor extends Component {
                     <AiOutlineClose />
                 </div>
                 <div className={classes.TaskInfo}>
-                    <div className={classes.TaskName}>
-                        <textarea onInput={this.onInputHandler} value={this.state.title} onChange={this.changeTitleHandler}></textarea>
-                    </div>
                     <div className={classes.creatorCharacteric}>
-                        {/* <span>ساخته شده توسط </span>
-                        <span>{this.props.task['created_at']} </span>
-                        <span> {this.props.task.creator.email} </span> */}
-                        <span>ساخته شده توسط mojtab_ameli در 20 تیر</span>
+                        <span>ساخته شده توسط </span>
+                        <span> {this.props.task.creator.email} <strong>({this.props.task.creator.username})</strong> </span>
+                        <span>در تاریخ {localCreatedTime}</span>
                     </div>
-                    <div className={classes.BtnGroup}>
-                        <button className={classes.Canceled}>
-                            لغو
-                        </button>
-                        <button className={classes.Confirmed}>
-                            تایید
-                        </button>
+                    <div className={classes.TaskName} onClick={this.openEditTitleHandler}>
+                        <textarea 
+                            spellCheck={false}
+                            onInput={this.onInputHandler} 
+                            value={this.state.title} 
+                            onChange={this.changeTitleHandler}>
+                        </textarea>
+                        {this.props.loadingChangeTaskTitle && 
+                            <div className={classes.LoaderTitle}>
+                                <FormLoading />
+                            </div>
+                        }
                     </div>
+                    {this.state.openEditTitle  &&
+                        <div className={classes.BtnGroup}>
+                            <button className={classes.Canceled} onClick={this.closeEditTitleHandler}>
+                                لغو
+                            </button>
+                            <button className={classes.Confirmed} onClick={this.changeTaskTitle}>
+                                تایید
+                            </button>
+                        </div>
+                    }
                 </div>
                 <div className={classes.Description}>
-                    {this.state.openDescription && 
+                    {this.props.openDescriptionTextarea && 
                         <>
-                            <textarea onInput={this.onInputHandler} value={this.state.description} onChange={this.changeDescriptionHandler}></textarea>
+                            <textarea onInput={this.onInputHandler} spellCheck={false}
+                                      value={this.state.description} 
+                                      onChange={this.changeDescriptionHandler}>
+                            </textarea>
                             <div className={classes.BtnGroup}>
                                 <button className={classes.Canceled} onClick={this.cancelChangeDescription}>
                                     لغو
                                 </button>
-                                <button className={classes.Confirmed} onClick={this.closeDescription}>
+                                <button className={classes.Confirmed} onClick={this.saveChangeDescription}>
                                     تایید
                                 </button>
                             </div>
                         </>
                     }
-                    {!this.state.openDescription &&
+                    {this.props.loadinChangeDescription &&
+                        <div className={classes.LoaderDescription}>
+                            <FormLoading />
+                        </div>
+                    }
+                    {!this.props.openDescriptionTextarea &&
                         <>
                             <button className={classes.ToggleDescriptBtn} onClick={this.openDescription}>
                                 <TbFileDescription />
-                                {this.state.description ? 'ویرایش توضیحات':  'افزودن توضیحات'}
+                                {this.props.task.description ? 'ویرایش توضیحات':  'افزودن توضیحات'}
                             </button>
-                            {this.state.description &&
-                                <p style={{textAlign: 'right', paddingRight: '7px', wordWrap: 'break-word'}}>{this.state.description}</p>
-                            }
+                            <p style={{textAlign: 'right', paddingRight: '24px', wordWrap: 'break-word'}}>
+                                {this.props.errorChangeDescription
+                                    ? this.props.task.description
+                                    : this.state.description
+                                }
+                            </p>
                         </>
                     }
                 </div>
                 <div className={classes.progressPercentage}>
                     <div className={classes.ProgressShower}>
                         <p>درصد پیشرفت پروژه</p> 
+                        {this.props.loadingChangeProgress && 
+                            <div className={classes.LoadingProgress}>
+                                <FormLoading />
+                            </div>
+                        }
                         {this.state.openPercentage ?
                             <>
                                 <input type="number" max={100} min={0} step={1} 
@@ -133,24 +202,77 @@ class TaskEditor extends Component {
                             </>
                             :
                             <>
-                                <span className={classes.PercentageShower}>{this.state.progressPercentage}</span>
+                                <span className={classes.PercentageShower}>
+                                    {this.props.errorChangeProgress 
+                                        ? this.props.task.percentage 
+                                        : this.state.progressPercentage
+                                    }
+                                </span>
                                 <span className={classes.PersentageEditation} onClick={this.openPercentageEdit}>(تعییر درصد پیشرفت)</span>
                             </>
                         }
                     </div>
                 </div>
-                {/* <div className={classes.TaskDate}>
+                <div className={classes.TaskDate}>
                     <div className={classes.StartDate}>
-                        <FaRegCalendarAlt /> شروع
-                        <input type="date" />
+                        <div className={classes.DateStatusDescription}>
+                            <div className={classes.DateIcon}>
+                                <FaRegCalendarAlt />
+                            </div>
+                            <div className={classes.DateTitle}>
+                                تاریخ و زمان شروع
+                            </div>
+                        </div>
+                        <DateComponent 
+                            datePoint="start" 
+                            task={this.props.task}
+                            taskId={this.props.task.id} 
+                            accessToken={this.props.accessToken} />
                     </div>
                     <div className={classes.DueDate}>
-                        <FaRegCalendarAlt />
+                        <div className={classes.DateStatusDescription}>
+                            <div className={classes.DateIcon}>
+                                <FaRegCalendarAlt />
+                            </div>
+                            <div className={classes.DateTitle}>
+                                تاریخ و زمان پایان
+                            </div>
+                        </div>
+                        <DateComponent 
+                            datePoint="due" 
+                            taskId={this.props.task.id} 
+                            accessToken={this.props.accessToken} />
                     </div>
-                </div> */}
+                </div>
             </div>
         );
     }
 }
 
-export default TaskEditor;
+const mapStateToProps = state => {
+    return {
+        accessToken: state.auth.accessToken,
+        loadingChangeProgress: state.dashboard.loadingChangeProgress,
+        errorChangeProgress: state.dashboard.errorChangeProgress,
+        loadinChangeDescription: state.dashboard.loadinChangeDescription,
+        errorChangeDescription: state.dashboard.errorChangeDescription,
+        openDescriptionTextarea: state.dashboard.openDescriptionTextarea,
+        loadingChangeTaskTitle: state.dashboard.loadingChangeTaskTitle,
+        errorChangeTaskTitle: state.dashboard.errorChangeTaskTitle
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onChangeProgressPercentage: 
+            (taskId, percentage, accessToken) => dispatch(actions.changeProgressPercentage(taskId, percentage, accessToken)),
+        onChangeDescription: 
+            (taskId, description, accessToken) => dispatch(actions.changeDescription(taskId, description, accessToken)),
+        onOpenDescriptionTextarea: () => dispatch(actions.openDescriptionTextarea()),
+        onCloseDescriptionTextarea: () => dispatch(actions.closeDescriptionTextarea()),
+        onChangeTaskTitle: 
+            (taskId, description, accessToken) => dispatch(actions.changeTaskTitle(taskId, description, accessToken))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskEditor);

@@ -10,6 +10,8 @@ import dashboardReducer from './store/reducers/dashboard';
 import authReducer from './store/reducers/auth';
 
 import './fonts/Farsi-Digits/Samim-Bold-FD.ttf';
+import './fonts/Farsi-Digits/Samim-Bold-FD.woff';
+import './fonts/Farsi-Digits/Samim-Bold-FD.woff2';
 
 const reducer = combineReducers({
   dashboard: dashboardReducer,

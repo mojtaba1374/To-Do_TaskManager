@@ -905,3 +905,247 @@ export const dragTaskOtherColumn = (taskId, newPosition, destinationCol, newStar
             });
     };
 };
+
+// CHANE PROGRESS PERCENTAGE OF TASK
+
+const startChangeProgressPercentage = () => {
+    return {
+        type: actionTypes.START_CHANGE_PROGRESS_PERCENTAGE
+    };
+};
+
+const successChangeProgressPercentage = (taskId, percentage) => {
+    return {
+        type: actionTypes.SUCCESS_CHANGE_PROGRESS_PERCENTAGE,
+        taskId,
+        percentage
+    };
+};
+
+const failChangeProgressPercentage = error => {
+    return {
+        type: actionTypes.FAIL_CHANGE_PROGRESS_PERCENTAGE,
+        error
+    };
+};
+
+export const changeProgressPercentage = (taskId, percentage, accessToken) => {
+    return dispatch => {
+
+        dispatch(startChangeProgressPercentage());
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let data = {
+            percentage: +percentage
+        }
+       
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        axios(config)
+        .then(response => {
+                dispatch(successChangeProgressPercentage(taskId, percentage));
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failChangeProgressPercentage(error));
+                console.log(error);
+            });
+    }
+}
+
+// OPEN AND CLOSE DESCRIPTION TEXTAREA
+
+export const openDescriptionTextarea = () => {
+    return {
+        type: actionTypes.OPEN_DESCRIPTION_TEXTAREA
+    };
+};
+
+export const closeDescriptionTextarea = () => {
+    return {
+        type: actionTypes.CLOSE_DESCRIPTION_TEXTAREA
+    };
+};
+
+// CHANGE DESCRIPTION OF TASK
+
+const startChangeDescription = () => {
+    return {
+        type: actionTypes.START_CHANGE_DESCRIPTION
+    };
+};
+
+const successChangeDescription = (taskId, description) => {
+    return {
+        type: actionTypes.SUCCESS_CHANGE_DESCRIPTION,
+        taskId,
+        description
+    };
+};
+
+const failChangeDescription = error => {
+    return {
+        type: actionTypes.FAIL_CHANGE_DESCRIPTION,
+        error
+    };
+};
+
+export const changeDescription = (taskId, description, accessToken) => {
+    return dispatch => {
+
+        dispatch(startChangeDescription());
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let data = {
+            description: description
+        }
+       
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+        console.log(data);
+
+        axios(config)
+        .then(response => {
+                dispatch(successChangeDescription(taskId, description));
+                dispatch(closeDescriptionTextarea());
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failChangeDescription(error));
+                dispatch(closeDescriptionTextarea());
+                console.log(error);
+            });
+    };
+};
+
+// CHANGE TASK TITLE
+
+const startChangeTaskTitle = () => {
+    return {
+        type: actionTypes.START_CHANGE_TASK_TITLE
+    };
+};
+
+const successChangeTaskTitle = (taskId, title) => {
+    return {
+        type: actionTypes.SUCCESS_CHANGE_TASK_TITLE,
+        taskId,
+        title
+    };
+};
+
+const failChangeTaskTitle = error => {
+    return {
+        type: actionTypes.FAIL_CHANGE_TASK_TITLE,
+        error
+    };
+};
+
+export const changeTaskTitle = (taskId, title, accessToken) => {
+    return dispatch => {
+        dispatch(startChangeTaskTitle());
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let data = {
+            title: title
+        }
+       
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        axios(config)
+        .then(response => {
+                dispatch(successChangeTaskTitle(taskId, title));
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failChangeTaskTitle(error));
+                console.log(error);
+            });
+    };
+};
+
+// CHANGE START DATA OF TASK
+
+const startChangeTaskStartDate = () => {
+    return {
+        type: actionTypes.START_CHANGE_TASK_START_DATE
+      };
+};
+
+const successChangeTaskStartDate = (taskId, startDate) => {
+    return {
+        type: actionTypes.SUCCESS_CHANGE_TASK_START_DATE,
+        taskId,
+        startDate
+    };
+};
+
+const failChangeTaskStartDate = error => {
+    return {
+        type: actionTypes.FAIL_CHANGE_TASK_START_DATE,
+        error
+    };
+};
+
+export const changeTaskStartDate = (taskId, startDate ,accessToken) => {
+    return dispatch => {
+
+        dispatch(startChangeTaskStartDate());
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let data = {
+            'start_date': startDate
+        };
+       
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        axios(config)
+        .then(response => {
+                dispatch(successChangeTaskStartDate(taskId, startDate));
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failChangeTaskStartDate(error));
+                console.log(error);
+            });
+    };
+};

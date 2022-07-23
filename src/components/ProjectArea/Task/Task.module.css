@@ -48,7 +48,7 @@
     height: 5px;
     border-radius: 4px;
     background-color: #23bb3c;
-    transition: all 0.3s ease-in-out;
+    transition: all 0.4s ease-in-out;
 }
 
 .Task:hover .ProgressPercent {

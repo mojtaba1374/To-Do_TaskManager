@@ -2,7 +2,7 @@
     width: 95%;
     margin: auto;
     position: relative;
-    z-index: 200;
+    z-index: 10;
 }
 
 .TaskNameContainer {

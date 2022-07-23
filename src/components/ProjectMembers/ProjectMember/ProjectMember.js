@@ -31,12 +31,12 @@ const ProjectMember = props => {
             </h4>
             <p className={paragraphClasses.join(' ')}>
                 {memberRole}
-                {(props.loadingDeleteMember && props.deletingMemberMail === props.userEmail) &&     // moshkel ine ke bara tamae list loading miad
-                    <div className={classes.Loading}>
-                        <FormLoading /> 
-                    </div>
-                }
             </p>
+            {(props.loadingDeleteMember && props.deletingMemberMail === props.userEmail) &&     // moshkel ine ke bara tamae list loading miad
+                <div className={classes.Loading}>
+                    <FormLoading /> 
+                </div>
+            }
             {(props.memberRole === 'User' && props.userRoleOfActiveProject === 'Admin') && 
                 <button className={classes.DeleteUserBtn} onClick={props.clickedDeleteUserBtn}>
                     حذف

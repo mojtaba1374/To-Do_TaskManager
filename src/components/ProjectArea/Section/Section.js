@@ -21,7 +21,7 @@ class Section extends Component {
     state = {
         addingTask: false,
         taskEditor: false,
-        taskClicked: null
+        selectedTask: null
     }
 
     addingNewTaskHandler = (disableAdding) => {
@@ -41,23 +41,18 @@ class Section extends Component {
             event.preventDefault();
         } else {
             this.props.onCreateTodoTask(taskContent, this.props.activeProjectId, this.props.accessToken);
-
-            // bayad yek loader dashte basham va vaghti ke success bod action bala adding task ra bebandad.
-            // !this.props.loadingCreateTask &&
-                // this.setState({
-                //     addingTask: false
-                // });
         }
     }
 
     openTaskEditor = (task) => {
         this.setState({
             taskEditor: true,
-            taskClicked: task
+            selectedTask: task
         });
     }
     
     closeTaskEditor = () => {
+        this.props.onCloseDescriptionTextarea();
         this.setState({taskEditor: false});
     }
 
@@ -109,9 +104,8 @@ class Section extends Component {
                                     {...draggableProvided.dragHandleProps}
                                     style={style}
                                 >
-                                    <Task 
-                                        title={task.title}
-                                        percentage={60}
+                                    <Task
+                                        task={task} 
                                         clickedTask={() => this.openTaskEditor(task)} />
                                 </div>
                             )
@@ -125,9 +119,9 @@ class Section extends Component {
             <>
                 <Backdrop showModal={this.state.taskEditor} clickedBackdrop={this.closeTaskEditor} />
                 <Modal showModal={this.state.taskEditor}>
-                    {this.state.taskClicked &&
+                    {this.state.selectedTask &&
                         <TaskEditor
-                            task={this.state.taskClicked}
+                            task={this.state.selectedTask}
                             closeTaskEditor={this.closeTaskEditor} />
                     }
                 </Modal>
@@ -171,6 +165,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onCreateTodoTask: (taskTitle, activeProjectId, accessToken) => dispatch(actions.createTodoTask(taskTitle, activeProjectId, accessToken)),
+        onCloseDescriptionTextarea: () => dispatch(actions.closeDescriptionTextarea())
     };
 };
 

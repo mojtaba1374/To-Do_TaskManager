@@ -5,12 +5,12 @@ import { FaRegCalendarAlt } from 'react-icons/fa';
 const Task = props => {
 
     const progressStyle = {
-        width: `${props.percentage}%`
+        width: `${props.task.percentage}%`
     };
     
     return (
         <div className={classes.Task} onClick={props.clickedTask}>
-            <p>{props.title}</p>
+            <p>{props.task.title}</p>
             <div className={classes.TaskInfo}>
                 <div className={classes.TaskDeadline}>
                     <span><FaRegCalendarAlt /></span>

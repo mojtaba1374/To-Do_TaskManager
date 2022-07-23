@@ -23,5 +23,11 @@ export {
     closeNotificationStatus,
     createTodoTask,
     dragTaskSameColumn,
-    dragTaskOtherColumn
+    dragTaskOtherColumn,
+    changeProgressPercentage,
+    openDescriptionTextarea,
+    closeDescriptionTextarea,
+    changeDescription,
+    changeTaskTitle,
+    changeTaskStartDate
 } from './dashboard';

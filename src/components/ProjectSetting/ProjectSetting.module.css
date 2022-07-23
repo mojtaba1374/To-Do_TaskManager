@@ -58,6 +58,7 @@
 .EmailInputContainer button:disabled {
     border: 1px solid #64b5bb;
     background-color: #64b5bb;
+    color: #c5c5c5;
     cursor: not-allowed;
 }
 

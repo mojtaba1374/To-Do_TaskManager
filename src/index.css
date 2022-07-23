@@ -30,3 +30,23 @@ div {
 input, button, textarea, select {
   font: inherit;
 }
+
+/* FOR STYLE OF DATE PICKER LIBRARY  */
+.tether-element {
+  z-index: 150;
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  box-shadow: 0 0 5px gray;
+  border-radius: 15px !important;
+}
+
+.calendarContainer  {
+  background-color: #fff !important;
+  border-radius: 15px !important;
+  font-size: 14px !important;
+}
+
+.rc-time-picker-input {
+  display: block;
+}

@@ -29,7 +29,16 @@ const initialState = {
     loadingConfirmedInvite: false,
     errorConfirmedInvite: null,
     loadingInconfirmedInvite: false,
-    errorInconfirmedInvite: null
+    errorInconfirmedInvite: null,
+    loadingChangeProgress: false,
+    errorChangeProgress: null,
+    openDescriptionTextarea: false,
+    errorChangeDescription: null,
+    loadinChangeDescription: false,
+    loadingChangeTaskTitle: false,
+    errorChangeTaskTitle: null,
+    loadingChangeTaskStartDate: false,
+    errorChangeTaskStartDate: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -458,6 +467,166 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 errorDragOtherCol: action.error,
                 projects: copyyProjects
+            };
+            break;
+        case actionTypes.START_CHANGE_PROGRESS_PERCENTAGE:
+            updatedState = {
+                ...state,
+                errorChangeProgress: null,
+                loadingChangeProgress: true
+            };
+            break;
+        case actionTypes.SUCCESS_CHANGE_PROGRESS_PERCENTAGE:
+            const copProjects = [...state.projects];
+
+            copProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        projectColumns[col].tasks.forEach(task => {
+                            if(task.id === + action.taskId) {
+                                task.percentage = action.percentage
+                            }
+                        });
+                    })
+                }
+            });
+            updatedState = {
+                ...state,
+                loadingChangeProgress: false,
+                projects: copProjects
+            };
+            break;
+        case actionTypes.FAIL_CHANGE_PROGRESS_PERCENTAGE:
+            updatedState = {
+                ...state,
+                loadingChangeProgress: false,
+                errorChangeProgress: action.error
+            };
+            break;
+        case actionTypes.OPEN_DESCRIPTION_TEXTAREA:
+            updatedState = {
+                ...state,
+                openDescriptionTextarea: true
+            };
+            break;
+        case actionTypes.CLOSE_DESCRIPTION_TEXTAREA:
+            updatedState = {
+                ...state,
+                openDescriptionTextarea: false
+            };
+            break;
+        case actionTypes.START_CHANGE_DESCRIPTION:
+            updatedState = {
+                ...state,
+                errorChangeDescription: null,
+                loadinChangeDescription: true
+            };
+            break;
+        case actionTypes.SUCCESS_CHANGE_DESCRIPTION:
+            const cloneProjects = [...state.projects];
+
+            cloneProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        projectColumns[col].tasks.forEach(task => {
+                            if(task.id === +action.taskId) {
+                                task.description = action.description
+                            }
+                        });
+                    })
+                }
+            });
+            updatedState = {
+                ...state,
+                loadinChangeDescription: false,
+                projects: cloneProjects
+            };
+            break;
+        case actionTypes.FAIL_CHANGE_DESCRIPTION:
+            updatedState = {
+                ...state,
+                loadinChangeDescription: false,
+                errorChangeDescription: action.error
+            };
+            break;
+        case actionTypes.START_CHANGE_TASK_TITLE:
+            updatedState = {
+                ...state,
+                errorChangeTaskTitle: null,
+                loadingChangeTaskTitle: true
+            };
+            break;
+        case actionTypes.SUCCESS_CHANGE_TASK_TITLE:
+            const cloningProjects = [...state.projects];
+
+            cloningProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        projectColumns[col].tasks.forEach(task => {
+                            if(task.id === +action.taskId) {
+                                task.title = action.title
+                            }
+                        });
+                    })
+                }
+            });
+            updatedState = {
+                ...state,
+                loadingChangeTaskTitle: false,
+                projects: cloningProjects
+            };
+            break;
+        case actionTypes.FAIL_CHANGE_TASK_TITLE:
+            updatedState = {
+                ...state,
+                loadingChangeTaskTitle: false,
+                errorChangeTaskTitle: action.error
+            }
+            break;
+        case actionTypes.START_CHANGE_TASK_START_DATE:
+            updatedState = {
+                ...state,
+                errorChangeTaskStartDate: null,
+                loadingChangeTaskStartDate: true
+            };
+            break;
+        case actionTypes.SUCCESS_CHANGE_TASK_START_DATE:
+            const clonedProjects = [...state.projects];
+
+            clonedProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        projectColumns[col].tasks.forEach(task => {
+                            if(task.id === +action.taskId) {
+                                task['start_date'] = action.startDate
+                            }
+                        });
+                    })
+                }
+            });
+            updatedState = {
+                ...state,
+                loadingChangeTaskStartDate: false,
+                projects: clonedProjects
+            };
+            break;
+        case actionTypes.FAIL_CHANGE_TASK_START_DATE:
+            updatedState = {
+                ...state,
+                errorChangeTaskStartDate: action.error,
+                loadingChangeTaskStartDate: false
             };
             break;
         default:
