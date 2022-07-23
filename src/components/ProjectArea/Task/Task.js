@@ -27,7 +27,7 @@ const Task = props => {
         <div className={classes.Task} onClick={props.clickedTask}>
             <p>{props.task.title}</p>
             <div className={classes.TaskInfo} 
-                 style={{visibility: !(props.task['start_date'] || props.task['due_date']) && 'hidden'}}>
+                style={{visibility: !(props.task['start_date'] || props.task['due_date']) && 'hidden'}}>
                 <div className={classes.TaskDeadline}>
                     <span><FaRegCalendarAlt /></span>
                     {startDate}

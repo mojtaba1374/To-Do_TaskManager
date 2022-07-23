@@ -12,12 +12,21 @@ class DateComponent extends Component {
 
     constructor(props) {
         super(props);
-        // const date = new Date(this.props.task.due_date).toLocaleString('fa-IR');
-        // const value = this.props.task ? new Date(this.props.task['start_date']) : null;
-        // const value = this.props.task['start-date'] ? new Date(this.props.task['start_date']) : null;
-        // console.log(value);
+        let value;
+        switch(props.datePoint) {
+            case 'start':
+                value = this.props.task.start_date ? moment(new Date(this.props.task['start_date'])) : null;
+                break;
+            case 'due':
+                value = this.props.task.due_date ? moment(new Date(this.props.task['due_date'])) : null;
+                break;
+            default:
+                value = null;
+        }
+        console.log(moment(null));
+        console.log('DATE IS  ',value);
         this.state = {
-            value: moment('1396/7/6 6:00 ق.ظ', 'jYYYY/jM/jD'),
+            value: value,
             setTodayOnBlur: false
         }
     }
@@ -33,8 +42,8 @@ class DateComponent extends Component {
 
     registerDateHandler = (datePoint) => {
         console.log(this.state.value);
-        let createdDate = new Date(new Date(this.state.value['_d'].toLocaleString('en-US'))).toISOString();  // we have to create date for backend so that understand that Date
-        // console.log(new Date(datePoint).toLocaleString('en-EN'));
+        let createdDate = this.state.value ? new Date(new Date(this.state.value['_d'].toLocaleString('en-US'))).toISOString().split('.')[0] + 'Z' : null;  // we have to create date for backend so that understand that Date
+        console.log(createdDate);
         switch (datePoint) {
             case 'start':
                 this.props.onChangeTaskStartDate(

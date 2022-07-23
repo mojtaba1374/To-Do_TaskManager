@@ -1124,6 +1124,7 @@ export const changeTaskStartDate = (taskId, startDate ,accessToken) => {
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
         }
+        console.log(startDate);
 
         let data = {
             'start_date': startDate
@@ -1186,6 +1187,8 @@ export const changeTaskDueDate = (taskId, dueDate ,accessToken) => {
         let data = {
             'due_date': dueDate
         };
+
+        console.log(dueDate);
        
         let config = {
             method: 'PUT',

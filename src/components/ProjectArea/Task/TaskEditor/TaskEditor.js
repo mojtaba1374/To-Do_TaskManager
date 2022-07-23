@@ -240,6 +240,7 @@ class TaskEditor extends Component {
                         </div>
                         <DateComponent 
                             datePoint="due" 
+                            task={this.props.task}
                             taskId={this.props.task.id} 
                             accessToken={this.props.accessToken} />
                     </div>

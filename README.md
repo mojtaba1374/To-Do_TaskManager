@@ -21,7 +21,7 @@ python backend/manage.py runserver
 
 > Now we have `server` services in `http://localhost:8000`
 
-### install react package in run it:
+### install react project dependencies:
 ```sh
 npm install
 npm start
