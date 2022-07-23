@@ -30,3 +30,43 @@ npm start
 > Now we have `client` in `http://localhost:3000`
 
 ## Usage
+
+* login page:
+
+![login page](/README_pictures/Login.JPG "login page")
+
+
+* register page:
+
+![register page](/README_pictures/register.JPG "register page")
+
+
+* create project:
+
+![create project](/README_pictures/CreateProject.JPG "create project")
+
+
+* create task and list of tasks:
+
+![create task and list of tasks](/README_pictures/Dashboard.JPG "create task and list of tasks")
+
+
+* project management and invite other user:
+
+![project management and invite other user](/README_pictures/Invite.JPG "project management and invite other user")
+
+
+* accept or reject invitation to project:
+
+![accept or reject invitation to project](/README_pictures/Notification.JPG "accept or reject invitation to project")
+
+
+* leave group by user:
+
+![leave group by user](/README_pictures/LeaveGroup.JPG "leave group by user")
+
+
+* task management:
+
+![task management](/README_pictures/taskManagement.JPG "task management")
+
