@@ -29,5 +29,6 @@ export {
     closeDescriptionTextarea,
     changeDescription,
     changeTaskTitle,
-    changeTaskStartDate
+    changeTaskStartDate,
+    changeTaskDueDate
 } from './dashboard';

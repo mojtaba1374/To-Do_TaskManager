@@ -1149,3 +1149,62 @@ export const changeTaskStartDate = (taskId, startDate ,accessToken) => {
             });
     };
 };
+
+
+// CHANGE DUE DATA OF TASK
+
+const startChangeTaskDueDate = () => {
+    return {
+        type: actionTypes.START_CHANGE_TASK_DUE_DATE
+      };
+};
+
+const successChangeTaskDueDate = (taskId, dueDate) => {
+    return {
+        type: actionTypes.SUCCESS_CHANGE_TASK_DUE_DATE,
+        taskId,
+        dueDate
+    };
+};
+
+const failChangeTaskDueDate = error => {
+    return {
+        type: actionTypes.FAIL_CHANGE_TASK_DUE_DATE,
+        error
+    };
+};
+
+export const changeTaskDueDate = (taskId, dueDate ,accessToken) => {
+    return dispatch => {
+
+        dispatch(startChangeTaskDueDate());
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let data = {
+            'due_date': dueDate
+        };
+       
+        let config = {
+            method: 'PUT',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            },
+            data : data
+        };
+
+        axios(config)
+        .then(response => {
+                dispatch(successChangeTaskDueDate(taskId, dueDate));
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failChangeTaskDueDate(error));
+                console.log(error);
+            });
+    };
+};
+

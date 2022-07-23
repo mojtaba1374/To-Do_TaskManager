@@ -629,6 +629,43 @@ const reducer = (state = initialState, action) => {
                 loadingChangeTaskStartDate: false
             };
             break;
+        case actionTypes.START_CHANGE_TASK_DUE_DATE:
+            updatedState = {
+                ...state,
+                errorChangeTaskDueDate: null,
+                loadingChangeTaskDueDate: true
+            };
+            break;
+        case actionTypes.SUCCESS_CHANGE_TASK_DUE_DATE:
+            const cloneedProjects = [...state.projects];
+
+            cloneedProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        projectColumns[col].tasks.forEach(task => {
+                            if(task.id === +action.taskId) {
+                                task['due_date'] = action.dueDate
+                            }
+                        });
+                    })
+                }
+            });
+            updatedState = {
+                ...state,
+                loadingChangeTaskDueDate: false,
+                projects: cloneedProjects
+            };
+            break;
+        case actionTypes.FAIL_CHANGE_TASK_DUE_DATE:
+            updatedState = {
+                ...state,
+                errorChangeTaskDueDate: action.error,
+                loadingChangeTaskDueDate: false
+            };
+            break;
         default:
             updatedState = state;
     }

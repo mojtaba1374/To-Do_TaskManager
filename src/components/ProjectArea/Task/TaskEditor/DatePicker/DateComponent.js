@@ -17,7 +17,7 @@ class DateComponent extends Component {
         // const value = this.props.task['start-date'] ? new Date(this.props.task['start_date']) : null;
         // console.log(value);
         this.state = {
-            value: moment('1396/7/6', 'jYYYY/jM/jD'),
+            value: moment('1396/7/6 6:00 ق.ظ', 'jYYYY/jM/jD'),
             setTodayOnBlur: false
         }
     }
@@ -43,7 +43,11 @@ class DateComponent extends Component {
                 );
                 break;
             case 'due':
-
+                this.props.onChangeTaskDueDate(
+                    this.props.taskId,
+                    createdDate,
+                    this.props.accessToken
+                );
                 break;
             default:
                 break;
@@ -83,7 +87,9 @@ class DateComponent extends Component {
 const mapDispatchToProps = dispatch => {
     return {
         onChangeTaskStartDate: 
-            (taskId, startDate, accessToken) => dispatch(actions.changeTaskStartDate(taskId, startDate, accessToken))
+            (taskId, startDate, accessToken) => dispatch(actions.changeTaskStartDate(taskId, startDate, accessToken)),
+        onChangeTaskDueDate: 
+            (taskId, dueDate, accessToken) => dispatch(actions.changeTaskDueDate(taskId, dueDate, accessToken)),
     };
 };
 

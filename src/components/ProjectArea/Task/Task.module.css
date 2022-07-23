@@ -12,8 +12,8 @@
 }
 
 .Task:hover {
-    /* background-color: #d0dddd; */
-    outline: 8px solid gray;
+    /* background-color: #e2e2e2; */
+    /* outline: 8px solid rgb(184, 29, 29); */
 }
 
 .Task p {
@@ -43,7 +43,6 @@
 }
 
 .ProgressPercent {
-    width: 99%;
     margin: 10px 0 0 auto;
     height: 5px;
     border-radius: 4px;
