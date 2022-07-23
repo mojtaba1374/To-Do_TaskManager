@@ -1126,6 +1126,10 @@ export const changeTaskStartDate = (taskId, startDate ,accessToken) => {
         }
         console.log(startDate);
 
+        if(!startDate) {
+            startDate =''
+        }
+
         let data = {
             'start_date': startDate
         };
@@ -1182,6 +1186,10 @@ export const changeTaskDueDate = (taskId, dueDate ,accessToken) => {
         let accesToken = accessToken;
         if(!accesToken) {
             accesToken = localStorage.getItem('access');
+        }
+        
+        if(!dueDate) {
+            dueDate =''
         }
 
         let data = {
