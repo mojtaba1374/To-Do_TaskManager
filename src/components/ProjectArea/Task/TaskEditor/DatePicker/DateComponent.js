@@ -12,7 +12,7 @@ class DateComponent extends Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props.task);
+        // const date = new Date(this.props.task.due_date).toLocaleString('fa-IR');
         // const value = this.props.task ? new Date(this.props.task['start_date']) : null;
         // const value = this.props.task['start-date'] ? new Date(this.props.task['start_date']) : null;
         // console.log(value);
@@ -23,6 +23,7 @@ class DateComponent extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props.task);
         console.log(this.state.value);
     }
 
