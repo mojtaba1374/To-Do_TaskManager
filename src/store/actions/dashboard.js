@@ -1219,3 +1219,58 @@ export const changeTaskDueDate = (taskId, dueDate ,accessToken) => {
     };
 };
 
+
+
+// DELETE TASK
+
+const startDeleteTask = () => {
+    return {
+        type: actionTypes.START_DELETE_TASK
+    };
+};
+
+const successDeleteTask = (taskId) => {
+    return {
+        type: actionTypes.SUCCESS_DELETE_TASK,
+        taskId
+    };
+};
+
+export const failDeleteTask = error => {
+    return {
+        type: actionTypes.FAIL_DELETE_TASK,
+        error
+    };
+};
+
+export const deleteTask = (taskId, accessToken) => {
+    return dispatch => {
+        console.log(taskId);
+        
+        dispatch(startDeleteTask());
+
+        let accesToken = accessToken;
+        if(!accesToken) {
+            accesToken = localStorage.getItem('access');
+        }
+
+        let config = {
+            method: 'delete',
+            url: `/project/task/${taskId}/`,
+            headers: { 
+              'Authorization': `Bearer ${accesToken}`
+            }
+        };
+
+        axios(config)
+        .then(response => {
+                dispatch(successDeleteTask(taskId));
+                console.log(response.data);
+            })
+            .catch(error => {
+                dispatch(failDeleteTask(error));
+                console.log(error);
+            });
+    };
+};
+

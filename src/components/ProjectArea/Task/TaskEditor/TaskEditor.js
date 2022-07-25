@@ -95,22 +95,17 @@ class TaskEditor extends Component {
         });
     }
 
+    deleteTaskHandler = () => {
+        this.props.onDeleteTask(
+            this.props.task.id,
+            this.props.accessToken
+        );
+        this.props.closeTaskEditor(); // bayad taeedie begirad baraye hazfe task va in alakie
+    }
+
     render() {
-        // const [createdDate, createdTime] = this.props.task['created_at'].split('T');
-        // const [year, month, day] = createdDate.split('-');
-        // const [hour, minute, second] = createdTime.split(':');
-        // console.log(year);
-        // console.log(month);
-        // console.log(day);
-        // console.log(hour);
-        // console.log(minute);
-        // console.log(second.slice(0,2));
-        // console.log(createdDate);
-        // console.log(createdTime);
         let localCreatedTime = new Date(this.props.task['created_at']).toLocaleString('fa-IR');
         
-
-        console.log(this.props.task);
         return (
             <div className={classes.TaskEditor}>
                 <div className={classes.CloseTaskEditor} onClick={this.props.closeTaskEditor}>
@@ -245,6 +240,18 @@ class TaskEditor extends Component {
                             accessToken={this.props.accessToken} />
                     </div>
                 </div>
+                <div className={classes.DeleteContainer}>
+                    {this.props.loadingDeleteTask &&
+                        <div className={classes.LoadingDelete}>
+                            <FormLoading />
+                        </div>
+                    }
+                    <button 
+                        className={classes.DeleteTaskBtn}
+                        onClick={this.deleteTaskHandler}>
+                        حذف
+                    </button>
+                </div>
             </div>
         );
     }
@@ -259,7 +266,9 @@ const mapStateToProps = state => {
         errorChangeDescription: state.dashboard.errorChangeDescription,
         openDescriptionTextarea: state.dashboard.openDescriptionTextarea,
         loadingChangeTaskTitle: state.dashboard.loadingChangeTaskTitle,
-        errorChangeTaskTitle: state.dashboard.errorChangeTaskTitle
+        errorChangeTaskTitle: state.dashboard.errorChangeTaskTitle,
+        loadingDeleteTask: state.dashboard.loadingDeleteTask,
+        errorDeleteTask: state.dashboard.errorDeleteTask
     };
 };
 
@@ -272,7 +281,8 @@ const mapDispatchToProps = dispatch => {
         onOpenDescriptionTextarea: () => dispatch(actions.openDescriptionTextarea()),
         onCloseDescriptionTextarea: () => dispatch(actions.closeDescriptionTextarea()),
         onChangeTaskTitle: 
-            (taskId, description, accessToken) => dispatch(actions.changeTaskTitle(taskId, description, accessToken))
+            (taskId, description, accessToken) => dispatch(actions.changeTaskTitle(taskId, description, accessToken)),
+        onDeleteTask: (taskId, accessToken) => dispatch(actions.deleteTask(taskId, accessToken))
     };
 };
 

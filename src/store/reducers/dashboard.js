@@ -38,7 +38,9 @@ const initialState = {
     loadingChangeTaskTitle: false,
     errorChangeTaskTitle: null,
     loadingChangeTaskStartDate: false,
-    errorChangeTaskStartDate: null
+    errorChangeTaskStartDate: null,
+    loadingDeleteTask: false,
+    errorDeleteTask: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -664,6 +666,43 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 errorChangeTaskDueDate: action.error,
                 loadingChangeTaskDueDate: false
+            };
+            break;
+        case actionTypes.START_DELETE_TASK:
+            updatedState = {
+                ...state,
+                loadingDeleteTask: true,
+                errorDeleteTask: null
+            };
+            break;
+        case actionTypes.SUCCESS_DELETE_TASK:
+            const cloneddProjects = [...state.projects];
+
+            cloneddProjects.forEach(project => {
+                let prjId = +Object.keys(project)[0];
+                if(prjId === +state.activeProjectId) {
+                    const projectColumns = {...project[prjId].columns};
+                    Object.keys(projectColumns).forEach(col => {
+                        console.log(projectColumns[col]);
+                        const updateProjectColumnsTask = projectColumns[col].tasks.filter(task => {
+                            return task.id !== +action.taskId
+                        });
+                        projectColumns[col].tasks = updateProjectColumnsTask
+                    })
+                }
+            });
+            
+            updatedState = {
+                ...state,
+                loadingDeleteTask: false,
+                projects: cloneddProjects
+            };
+            break;
+        case actionTypes.FAIL_DELETE_TASK:
+            updatedState = {
+                ...state,
+                loadingDeleteTask: false,
+                errorDeleteTask: action.error
             };
             break;
         default:

@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import classes from './ProjectSetting.module.css';
+
 import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
+import { AiOutlineClose } from 'react-icons/ai';
+
 
 const EMAILREgex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -39,6 +42,9 @@ class ProjectSetting extends Component {
         return (
             this.props.userRoleOfActiveProject === 'Admin' ?
             <div className={classes.SettingContainer}>
+                <div className={classes.CloseProjectSetting} onClick={this.props.closeSettingProject}>
+                    <AiOutlineClose />
+                </div>
                 <h3 style={{textAlign: 'right'}}>مدیریت پروژه</h3>
                 <div className={classes.ProjectNameContainer}>
                     <div className={classes.NameInputContainer}>
@@ -73,7 +79,8 @@ class ProjectSetting extends Component {
                         </div>
                     }
                 </div>
-            </div> :
+            </div> 
+            :
             <h3 style={{textAlign: 'right', paddingRight: '40px'}}>اعضای تیم پروژه</h3>
         );
     }

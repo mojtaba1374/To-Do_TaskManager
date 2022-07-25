@@ -14,7 +14,7 @@ import ProjectMember from '../ProjectMembers/ProjectMember/ProjectMember';
 import { connect } from 'react-redux';
 import * as actions from '../../store/actions/index';
 
-import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
+// import FormLoading from '../Ui/Loader/FormLoading/FormLoading';
 
 
 class ProjectsMenu extends Component {
@@ -127,6 +127,7 @@ class ProjectsMenu extends Component {
                         projectName={this.props.activeProject}
                         loadingEditPrjName={this.props.loadingEditPrjName}
                         loadingInvitation={this.props.loadingInvitation}
+                        closeSettingProject={this.props.onCloseSettingProjectModal}
                         clickedEditName={this.editeProjectName}
                         clickedAddMember={this.inviteMember} />
                     <ProjectMembers loadingGetMembers={this.props.loadingGetMembers}>

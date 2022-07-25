@@ -123,7 +123,9 @@ const mapStateToProps = state => {
         profileData: state.dashboard.profileData,
         access: state.auth.accessToken,
         loadingProfile: state.dashboard.loadingProfile,
+        errorProfile: state.dashboard.errorProfile,
         loadingProjects: state.dashboard.loadingProjects,
+        errorProjects: state.dashboard.errorProject,
         loadingConfirmedInvite: state.dashboard.loadingConfirmedInvite,
         loadingInconfirmedInvite: state.dashboard.loadingInconfirmedInvite
     };

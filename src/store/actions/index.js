@@ -30,5 +30,6 @@ export {
     changeDescription,
     changeTaskTitle,
     changeTaskStartDate,
-    changeTaskDueDate
+    changeTaskDueDate,
+    deleteTask
 } from './dashboard';
